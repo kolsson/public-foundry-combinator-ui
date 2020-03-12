@@ -2,190 +2,29 @@ import React from "react";
 import styled from "styled-components";
 import { Button, Dropdown, DropdownButton } from "react-bootstrap";
 
+import { StateContext, reducer, initialState } from "./core/context";
+import { loadFontList } from "./core/fonts";
+import { loadInputs } from "./core/inputs";
+import { loadFontInferences } from "./core/inferences";
+
+import {
+  GridLayout,
+  GridTitle,
+  GridItem,
+  GridSvg,
+  GridGlyph,
+  GridInputsActions,
+  GridInferencesActions,
+  GridOutputsActions
+} from "./ui/grid";
+
+import { LoadingCover, LoadingText } from "./ui/loading";
+
 import "./App.css";
-
-//-----------------------------------------------------------------------------
-// state
-//-----------------------------------------------------------------------------
-
-const StateContext = React.createContext();
-
-const emptyGlyphs = [];
-let index = 0;
-for (let glyph of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
-  emptyGlyphs.push({
-    index: index++,
-    glyph,
-    uni: glyph.charCodeAt(0),
-    svg: "",
-    source: "",
-    sourceFontName: ""
-  });
-}
-
-const initialState = {
-  modelList: ["models-google_external", "models-google_internal"],
-  fontList: [],
-
-  modelName: "models-google",
-  modelSuffix: "external",
-  fontName: "...",
-  inferenceGlyph: "...",
-
-  inputs: [...emptyGlyphs],
-  inferences: [...emptyGlyphs],
-  outputs: [...emptyGlyphs],
-
-  isLoading: false
-};
-
-const reducer = (state, [type, payload]) => {
-  // console.log('Reducer action:', type, payload);
-
-  switch (type) {
-    //-----------------------------------------------------------------------------
-    // model / font
-    //-----------------------------------------------------------------------------
-
-    case "loadingFontList":
-      return {
-        ...state,
-        fontList: initialState.fontList
-        // isLoading: true
-      };
-
-    case "loadedFontList":
-      return {
-        ...state,
-        fontList: payload.fontList,
-        fontName: payload.fontList[0],
-        isLoading: false
-      };
-
-    case "setModel":
-      // sanity check
-      if (
-        state.modelName === payload.modelName &&
-        state.modelSuffix === payload.modelSuffix
-      )
-        return state;
-
-      return {
-        ...state,
-        modelName: payload.modelName,
-        modelSuffix: payload.modelSuffix,
-        isLoading: true
-      };
-
-    case "setFontName":
-      // sanity check
-      if (state.fontName === payload.fontName) return state;
-
-      return {
-        ...state,
-        fontName: payload.fontName,
-        inputs: initialState.inputs
-        // isLoading: true
-      };
-
-    case "setInferenceGlyph":
-      // set our inferenceGlyph and load our inference
-      return {
-        ...state,
-        inferenceGlyph: payload.inferenceGlyph,
-        inferences: initialState.inferences,
-        isLoading: true
-      };
-
-    //-----------------------------------------------------------------------------
-    // inputs / inferences
-    //-----------------------------------------------------------------------------
-
-    case "loadedInputs":
-      return {
-        ...state,
-        inputs: payload.inputs,
-        isLoading: false
-      };
-
-    case "loadedInferences":
-      return {
-        ...state,
-        inferences: payload.inferences,
-        isLoading: false
-      };
-
-    //-----------------------------------------------------------------------------
-    // outputs
-    //-----------------------------------------------------------------------------
-
-    case "clearOutputs":
-      return {
-        ...state,
-        outputs: [...emptyGlyphs]
-      };
-
-    case "clearOutput": {
-      const output = state.outputs[payload.index];
-      const newOutputs = [...state.outputs];
-      newOutputs[payload.index] = {
-        index: output.index,
-        glyph: output.glyph,
-        uni: output.glyph.charCodeAt(0),
-        svg: "",
-        source: "",
-        sourceFontName: ""
-      };
-
-      return {
-        ...state,
-        outputs: newOutputs
-      };
-    }
-    case "setOutput": {
-      const newOutputs = [...state.outputs];
-      newOutputs[payload.index] = payload.output;
-
-      return {
-        ...state,
-        outputs: newOutputs
-      };
-    }
-
-    default:
-      return state;
-  }
-};
 
 //-----------------------------------------------------------------------------
 // App
 //-----------------------------------------------------------------------------
-
-const LoadingCover = styled.div`
-  position: fixed;
-  top: 0px;
-  left: 0;
-  bottom: 0;
-  right: 0;
-
-  font-size: 36px;
-  line-height: 36px;
-
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  background: repeating-linear-gradient(
-    45deg,
-    #606dbc,
-    #606dbc 10px,
-    #465298 10px,
-    #465298 20px
-  );
-  opacity: 0.75;
-  z-index: 1000;
-`;
 
 const ContainerLayout = styled.div`
   position: absolute;
@@ -197,59 +36,6 @@ const ContainerLayout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const GridLayout = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
-  grid-auto-flow: dense;
-  padding: 10px;
-`;
-
-const GridTitle = styled.div`
-  padding: 0 10px 10px;
-  color: white;
-  text-align: left;
-`;
-
-const GridItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-
-  padding: 4px 0;
-  background-color: lightgray;
-  border-radius: 5px;
-  &:nth-child(odd) {
-    background-color: darkgray;
-  }
-`;
-
-const GridSvg = styled.div`
-  background-color: ${props => (props.selected ? "lightblue" : "white")};
-  width: 100%;
-  height: 50px;
-`;
-
-const GridGlyph = styled.div``;
-
-const GridActions = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const GridAction = styled.div`
-  font-size: 18px;
-
-  &:hover {
-    color: lightblue;
-  }
-
-  cursor: pointer;
 `;
 
 const ControlsLayout = styled.div`
@@ -290,9 +76,7 @@ const HSpacer = styled.div`
 `;
 
 function Grid(props) {
-  const [{ modelName, modelSuffix, fontName, inferenceGlyph }, dispatch] = React.useContext(
-    StateContext
-  );
+  const [{ fontName, inferenceGlyph }] = React.useContext(StateContext);
   return (
     <div>
       <GridLayout>
@@ -307,81 +91,9 @@ function Grid(props) {
               dangerouslySetInnerHTML={{ __html: x.svg }}
             ></GridSvg>
             <GridGlyph>{x.glyph}</GridGlyph>
-            {props.title === "Inputs" && (
-              <GridActions>
-                <GridAction
-                  onClick={() => {
-                    const output = {
-                      index: x.index,
-                      glyph: x.glyph,
-                      uni: x.glyph.charCodeAt(0),
-                      svg: x.svg,
-                      source: "input",
-                      sourceFontName: fontName
-                    };
-
-                    dispatch(["setOutput", { index: x.index, output }]);
-                  }}
-                >
-                  ↓
-                </GridAction>
-                <div style={{ paddingRight: 5 }} />
-                <GridAction
-                  onClick={() => {
-                    const inferenceGlyph = x.glyph;
-
-                    const fetchData = async () => {
-                      await loadFontInferences(
-                        modelName,
-                        modelSuffix,
-                        fontName,
-                        inferenceGlyph,
-                        dispatch
-                      );
-                    };
-
-                    fetchData();
-                  }}
-                >
-                  ↻
-                </GridAction>
-              </GridActions>
-            )}
-            {props.title === "Inferences" && (
-              <GridActions>
-                <GridAction
-                  onClick={() => {
-                    const output = {
-                      index: x.index,
-                      glyph: x.glyph,
-                      uni: x.glyph.charCodeAt(0),
-                      svg: x.svg,
-                      source: "inference",
-                      sourceFontName: fontName
-                    };
-
-                    dispatch(["setOutput", { index: x.index, output }]);
-                  }}
-                >
-                  ↓
-                </GridAction>
-                <div style={{ paddingRight: 5 }} />
-                <GridAction>↻</GridAction>
-              </GridActions>
-            )}
-            {props.title === "Outputs" && (
-              <GridActions>
-                <GridAction
-                  onClick={() => {
-                    dispatch(["clearOutput", { index: x.index }]);
-                  }}
-                >
-                  ⨉
-                </GridAction>
-                <div style={{ paddingRight: 5 }} />
-                <GridAction>↻</GridAction>
-              </GridActions>
-            )}
+            {props.title === "Inputs" && <GridInputsActions x={x} />}
+            {props.title === "Inferences" && <GridInferencesActions x={x} />}
+            {props.title === "Outputs" && <GridOutputsActions x={x} />}
           </GridItem>
         ))}
       </GridLayout>
@@ -393,6 +105,7 @@ function Grid(props) {
 function Controls(props) {
   const [
     {
+      host,
       modelList,
       fontList,
       modelName,
@@ -432,6 +145,7 @@ function Controls(props) {
 
                 dispatch(["setModel", { modelName, modelSuffix }]);
                 await loadFontInferences(
+                  host,
                   modelName,
                   modelSuffix,
                   fontName,
@@ -458,8 +172,13 @@ function Controls(props) {
             if (fontName !== fontList[ek]) {
               const fetchData = async () => {
                 const fontName = fontList[ek]; // override our context
-                const inferenceGlyph = await loadInputs(fontName, dispatch);
+                const inferenceGlyph = await loadInputs(
+                  host,
+                  fontName,
+                  dispatch
+                );
                 await loadFontInferences(
+                  host,
                   modelName,
                   modelSuffix,
                   fontName,
@@ -503,107 +222,30 @@ function Controls(props) {
   );
 }
 
-async function loadInputs(fontName, dispatch) {
-  dispatch(["setFontName", { fontName }]);
-
-  const result = await fetch(`http://127.0.0.1:5959/inputs/${fontName}`);
-  const data = (await result.json()).inputs;
-  const [inputs, inferenceGlyph] = transformInputs(fontName, data);
-
-  dispatch(["loadedInputs", { inputs }]);
-
-  return inferenceGlyph;
-}
-
-async function loadFontInferences(
-  modelName,
-  modelSuffix,
-  fontName,
-  inferenceGlyph,
-  dispatch
-) {
-  dispatch(["setInferenceGlyph", { inferenceGlyph }]);
-  const ms = modelSuffix || "0";
-
-  const result = await fetch(
-    `http://127.0.0.1:5959/infer/${modelName}/${ms}/${fontName}/${inferenceGlyph}`
-  );
-  const data = (await result.json()).inferences;
-  const inferences = transformInferences(fontName, data);
-
-  dispatch(["loadedInferences", { inferences }]);
-}
-
-function transformInputs(fontName, data) {
-  const inputs = [];
-  let inferenceGlyph = "";
-
-  let index = 0;
-  for (let glyph in data) {
-    const svg = data[glyph];
-
-    // set our first inference glyph
-    if (inferenceGlyph === "" && svg !== "") {
-      inferenceGlyph = glyph;
-    }
-
-    inputs.push({
-      index: index++,
-      glyph,
-      uni: glyph.charCodeAt(0),
-      svg,
-      source: "input",
-      sourceFontName: fontName
-    });
-  }
-
-  return [inputs, inferenceGlyph];
-}
-
-function transformInferences(fontName, data) {
-  const inferences = [];
-
-  let index = 0;
-  for (let glyph in data) {
-    const svg = data[glyph];
-
-    inferences.push({
-      index: index++,
-      glyph,
-      uni: glyph.charCodeAt(0),
-      svg,
-      source: "inference",
-      sourceFontName: fontName
-    });
-  }
-
-  return inferences;
-}
-
 function Container(props) {
   const [
     {
-      isLoading,
+      host,
       modelName,
       modelSuffix,
       fontName,
       inputs,
       inferences,
-      outputs
+      outputs,
+      isInferring
     },
     dispatch
   ] = React.useContext(StateContext);
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      dispatch(["loadingFontList"]);
-      const result = await fetch("http://127.0.0.1:5959/fonts");
-      const fontList = (await result.json()).fonts;
-      dispatch(["loadedFontList", { fontList }]);
+    // first run
 
+    const fetchData = async () => {
+      const fontList = await loadFontList(host, dispatch);
       const fontName = fontList[0]; // override our context
-      const inferenceGlyph = await loadInputs(fontName, dispatch);
+      const inferenceGlyph = await loadInputs(host, fontName, dispatch);
       await loadFontInferences(
+        host,
         modelName,
         modelSuffix,
         fontName,
@@ -617,11 +259,9 @@ function Container(props) {
 
   return (
     <>
-      {isLoading && (
+      {isInferring && (
         <LoadingCover>
-          <div style={{ padding: 30, border: "3px solid white" }}>
-            Inferring...
-          </div>
+          <LoadingText>Inferring...</LoadingText>
         </LoadingCover>
       )}
       <Controls fontName={fontName} />
