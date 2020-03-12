@@ -30,8 +30,8 @@ export const initialState = {
 
   modelName: "models-google",
   modelSuffix: "external",
-  fontName: "...",
-  inferenceGlyph: "...",
+  fontName: "",
+  inferenceGlyph: "",
 
   inputs: [...emptyGlyphSet],
   inferences: [...emptyGlyphSet],

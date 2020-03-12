@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { Button, Dropdown, DropdownButton } from "react-bootstrap";
 
 import { StateContext, reducer, initialState } from "./core/context";
-import { loadFontList } from "./core/fonts";
-import { loadInputs } from "./core/inputs";
+import { loadFontList, loadFont } from "./core/fonts";
 import { loadFontInferences } from "./core/inferences";
 
 import {
@@ -18,6 +17,12 @@ import {
   GridOutputsActions
 } from "./ui/grid";
 
+import {
+  ControlBarLayout,
+  ControlBarGroup,
+  ControlBarSpacer
+} from "./ui/controlbar";
+import { InfoGroup } from "./ui/controlbar-info";
 import { LoadingCover, LoadingText } from "./ui/loading";
 
 import "./App.css";
@@ -26,7 +31,7 @@ import "./App.css";
 // App
 //-----------------------------------------------------------------------------
 
-const ContainerLayout = styled.div`
+const GridsContainerLayout = styled.div`
   position: absolute;
   top: 60px;
   left: 0;
@@ -36,43 +41,6 @@ const ContainerLayout = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-`;
-
-const ControlsLayout = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  width: 100%;
-  min-height: 60px;
-
-  padding: 10px;
-  text-align: left;
-  background-color: lightgray;
-`;
-
-const InfoBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  padding: 0 10px;
-  height: 40px;
-
-  color: white;
-
-  background-color: gray;
-  border-radius: 5px;
-`;
-
-const ControlGroup = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const HSpacer = styled.div`
-  padding-right: 10px;
 `;
 
 function Grid(props) {
@@ -102,7 +70,7 @@ function Grid(props) {
   );
 }
 
-function Controls(props) {
+function ControlBar(props) {
   const [
     {
       host,
@@ -118,19 +86,9 @@ function Controls(props) {
   ] = React.useContext(StateContext);
 
   return (
-    <ControlsLayout>
-      <ControlGroup>
-        <InfoBox>
-          {modelName}_{modelSuffix}
-        </InfoBox>
-        <HSpacer />
-        <InfoBox>{fontName}</InfoBox>
-        <HSpacer />
-        <InfoBox>
-          <strong>{inferenceGlyph}</strong>
-        </InfoBox>
-      </ControlGroup>
-      <ControlGroup>
+    <ControlBarLayout>
+      <InfoGroup />
+      <ControlBarGroup>
         <DropdownButton
           variant="outline-primary"
           id="dropdown-basic-button"
@@ -163,7 +121,7 @@ function Controls(props) {
             </Dropdown.Item>
           ))}
         </DropdownButton>
-        <HSpacer />
+        <ControlBarSpacer />
         <DropdownButton
           variant="outline-primary"
           id="dropdown-basic-button"
@@ -172,17 +130,11 @@ function Controls(props) {
             if (fontName !== fontList[ek]) {
               const fetchData = async () => {
                 const fontName = fontList[ek]; // override our context
-                const inferenceGlyph = await loadInputs(
-                  host,
-                  fontName,
-                  dispatch
-                );
-                await loadFontInferences(
+                await loadFont(
                   host,
                   modelName,
                   modelSuffix,
                   fontName,
-                  inferenceGlyph,
                   dispatch
                 );
               };
@@ -196,15 +148,15 @@ function Controls(props) {
             </Dropdown.Item>
           ))}
         </DropdownButton>
-      </ControlGroup>
-      <ControlGroup>
+      </ControlBarGroup>
+      <ControlBarGroup>
         <Button
           variant="outline-danger"
           onClick={() => dispatch(["clearOutputs"])}
         >
           Clear Outputs
         </Button>
-        <HSpacer />
+        <ControlBarSpacer />
         <Button
           variant="outline-success"
           onClick={() => {
@@ -217,8 +169,8 @@ function Controls(props) {
         >
           Copy Outputs
         </Button>
-      </ControlGroup>
-    </ControlsLayout>
+      </ControlBarGroup>
+    </ControlBarLayout>
   );
 }
 
@@ -243,15 +195,7 @@ function Container(props) {
     const fetchData = async () => {
       const fontList = await loadFontList(host, dispatch);
       const fontName = fontList[0]; // override our context
-      const inferenceGlyph = await loadInputs(host, fontName, dispatch);
-      await loadFontInferences(
-        host,
-        modelName,
-        modelSuffix,
-        fontName,
-        inferenceGlyph,
-        dispatch
-      );
+      await loadFont(host, modelName, modelSuffix, fontName, dispatch);
     };
 
     fetchData();
@@ -264,12 +208,12 @@ function Container(props) {
           <LoadingText>Inferring...</LoadingText>
         </LoadingCover>
       )}
-      <Controls fontName={fontName} />
-      <ContainerLayout>
+      <ControlBar fontName={fontName} />
+      <GridsContainerLayout>
         <Grid data={inputs} fontName={fontName} title="Inputs" />
         <Grid data={inferences} title="Inferences" />
         <Grid data={outputs} title="Outputs" />
-      </ContainerLayout>
+      </GridsContainerLayout>
     </>
   );
 }
