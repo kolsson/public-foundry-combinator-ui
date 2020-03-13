@@ -19,13 +19,21 @@ export async function loadFont(
   fontName,
   dispatch
 ) {
-  const inferenceGlyph = await loadInputs(host, fontName, dispatch);
-  await loadFontInferences(
+  const inferenceGlyphRecord = await loadInputs(
     host,
     modelName,
     modelSuffix,
     fontName,
-    inferenceGlyph,
+    dispatch
+  );
+
+  // we can't unwind a font change right now (nor should we need to)
+  // so we don't pass a currInferenceGlyphRecord
+
+  await loadFontInferences(
+    host,
+    inferenceGlyphRecord,
+    inferenceGlyphRecord,
     dispatch
   );
 }

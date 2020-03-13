@@ -1,4 +1,4 @@
-function transformInferences(fontName, data) {
+function transformInferences(inferenceGlyphRecord, source, data) {
   const inferences = [];
 
   let index = 0;
@@ -10,8 +10,10 @@ function transformInferences(fontName, data) {
       glyph,
       uni: glyph.charCodeAt(0),
       svg,
-      source: "inference",
-      sourceFontName: fontName
+      source,
+      sourceFontName: inferenceGlyphRecord.sourceFontName,
+      sourceModelName: inferenceGlyphRecord.sourceModelName,
+      sourceModelSuffix: inferenceGlyphRecord.sourceModelSuffix
     });
   }
 
@@ -20,20 +22,66 @@ function transformInferences(fontName, data) {
 
 export async function loadFontInferences(
   host,
-  modelName,
-  modelSuffix,
-  fontName,
-  inferenceGlyph,
+  currInferenceGlyphRecord,
+  inferenceGlyphRecord,
   dispatch
 ) {
-  dispatch(["loadInference", { inferenceGlyph }]);
-  const ms = modelSuffix || "0";
+  dispatch(["loadInference", { inferenceGlyphRecord }]);
+  const ms = inferenceGlyphRecord.sourceModelSuffix || "0";
 
-  const api = `${host}/infer/${modelName}/${ms}/${fontName}/${inferenceGlyph}`;
+  const api = `${host}/infer/${inferenceGlyphRecord.sourceModelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
 
-  const result = await fetch(api);
-  const data = (await result.json()).inferences;
-  const inferences = transformInferences(fontName, data);
+  try {
+    const result = await fetch(api);
+    const data = (await result.json()).inferences;
+    const inferences = transformInferences(
+      inferenceGlyphRecord,
+      "fontInference", // font -> fontInference (1 step aaway from the font)
+      data
+    );
 
-  dispatch(["loadedInferences", { inferences }]);
+    dispatch(["loadedInferences", { inferences }]);
+  } catch (error) {
+    // test for 400 error
+
+    dispatch([
+      "loadedInferencesFailed",
+      { inferenceGlyphRecord: currInferenceGlyphRecord }
+    ]);
+    alert(error);
+  }
+}
+
+export async function loadSvgInferences(
+  host,
+  currInferenceGlyphRecord,
+  inferenceGlyphRecord,
+  dispatch
+) {
+  dispatch(["loadInference", { inferenceGlyphRecord }]);
+  const ms = inferenceGlyphRecord.sourceModelSuffix || "0";
+
+  const api = `${host}/infer/${inferenceGlyphRecord.sourceModelName}/${ms}/${
+    inferenceGlyphRecord.glyph
+  }?svg=${encodeURIComponent(inferenceGlyphRecord.svg)}`;
+
+  try {
+    const result = await fetch(api);
+    const data = (await result.json()).inferences;
+    const inferences = transformInferences(
+      inferenceGlyphRecord,
+      "svgInference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
+      data
+    );
+
+    dispatch(["loadedInferences", { inferences }]);
+  } catch (error) {
+    // test for 400 error
+
+    dispatch([
+      "loadedInferencesFailed",
+      { inferenceGlyphRecord: currInferenceGlyphRecord }
+    ]);
+    alert(error);
+  }
 }

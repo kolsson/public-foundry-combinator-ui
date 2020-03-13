@@ -1,9 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
+import { StateContext } from "../core/context";
+
 import {
   GridSetOutputAction,
   GridFontInferenceAction,
+  GridSvgInferenceAction,
   GridClearOutputAction
 } from "./grid-actions";
 
@@ -72,10 +75,10 @@ export function GridInputsActions(props) {
         index={props.x.index}
         glyph={props.x.glyph}
         svg={props.x.svg}
-        source="input"
+        source={props.x.source}
       />
       <GridActionSpacer />
-      <GridFontInferenceAction glyph={props.x.glyph} />
+      <GridFontInferenceAction glyphRecord={props.x} />
     </GridActions>
   );
 }
@@ -87,10 +90,10 @@ export function GridInferencesActions(props) {
         index={props.x.index}
         glyph={props.x.glyph}
         svg={props.x.svg}
-        source="inference"
+        source={props.x.source}
       />
       <GridActionSpacer />
-      <GridAction>↻</GridAction>
+      <GridSvgInferenceAction glyphRecord={props.x} />
     </GridActions>
   );
 }
@@ -100,7 +103,70 @@ export function GridOutputsActions(props) {
     <GridActions>
       <GridClearOutputAction index={props.x.index} />
       <GridActionSpacer />
-      <GridAction>↻</GridAction>
+      <GridSvgInferenceAction glyphRecord={props.x} />
     </GridActions>
+  );
+}
+
+function checkSelected(title, inferenceGlyphRecord, x) {
+  let selected = false;
+
+  if (inferenceGlyphRecord) {
+    switch (title) {
+      case "Outputs":
+        break;
+
+      case "Inferences":
+        break;
+
+      case "Inputs":
+      default:
+        // a. our current inferenceGlyphRecord says we are inferring from a font
+        // b. the current inferenceGlyphRecord glyph is the same as this glpyhRecord font
+        // c. the current inferenceGlyphRecord fontName is the same as this glpyhRecord fontName
+
+        selected =
+          inferenceGlyphRecord.source === "font" &&
+          inferenceGlyphRecord.sourceFontName === x.sourceFontName &&
+          inferenceGlyphRecord.glyph === x.glyph;
+
+        // if (x.glyph === '0')
+        //   console.warn(
+        //     false,
+        //     inferenceGlyphRecord.source,
+        //     inferenceGlyphRecord.sourceFontName,
+        //     inferenceGlyphRecord.glyph,
+        //     x.sourceFontName,
+        //     x.glyph,
+        //     inferenceGlyphRecord.sourceFontName === x.sourceFontName,
+        //     inferenceGlyphRecord.glyph === x.glyph
+        //   );
+    }
+  }
+
+  return selected;
+}
+
+export function Grid(props) {
+  const [{ inferenceGlyphRecord }] = React.useContext(StateContext);
+
+  return (
+    <div>
+      <GridLayout>
+        {props.data.map(x => (
+          <GridItem key={x.glyph}>
+            <GridSvg
+              selected={checkSelected(props.title, inferenceGlyphRecord, x)}
+              dangerouslySetInnerHTML={{ __html: x.svg }}
+            ></GridSvg>
+            <GridGlyph>{x.glyph}</GridGlyph>
+            {props.title === "Inputs" && <GridInputsActions x={x} />}
+            {props.title === "Inferences" && <GridInferencesActions x={x} />}
+            {props.title === "Outputs" && <GridOutputsActions x={x} />}
+          </GridItem>
+        ))}
+      </GridLayout>
+      <GridTitle>{props.title}</GridTitle>
+    </div>
   );
 }

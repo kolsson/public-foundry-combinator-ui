@@ -1,28 +1,25 @@
 import React from "react";
 import styled from "styled-components";
-import { Button, Dropdown, DropdownButton } from "react-bootstrap";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 
 import { StateContext, reducer, initialState } from "./core/context";
 import { loadFontList, loadFont } from "./core/fonts";
-import { loadFontInferences } from "./core/inferences";
+import { loadFontInferences, loadSvgInferences } from "./core/inferences";
 
-import {
-  GridLayout,
-  GridTitle,
-  GridItem,
-  GridSvg,
-  GridGlyph,
-  GridInputsActions,
-  GridInferencesActions,
-  GridOutputsActions
-} from "./ui/grid";
+import { Grid } from "./ui/grid";
 
 import {
   ControlBarLayout,
   ControlBarGroup,
   ControlBarSpacer
 } from "./ui/controlbar";
+import {
+  ClearOutputsButton,
+  PasteOutputsButton,
+  CopyOutputsButton
+} from "./ui/controlbar-buttons";
 import { InfoGroup } from "./ui/controlbar-info";
+
 import { LoadingCover, LoadingText } from "./ui/loading";
 
 import "./App.css";
@@ -43,33 +40,6 @@ const GridsContainerLayout = styled.div`
   justify-content: space-between;
 `;
 
-function Grid(props) {
-  const [{ fontName, inferenceGlyph }] = React.useContext(StateContext);
-  return (
-    <div>
-      <GridLayout>
-        {props.data.map(x => (
-          <GridItem key={x.glyph}>
-            <GridSvg
-              selected={
-                props.title === "Inputs" &&
-                x.sourceFontName === fontName &&
-                x.glyph === inferenceGlyph
-              }
-              dangerouslySetInnerHTML={{ __html: x.svg }}
-            ></GridSvg>
-            <GridGlyph>{x.glyph}</GridGlyph>
-            {props.title === "Inputs" && <GridInputsActions x={x} />}
-            {props.title === "Inferences" && <GridInferencesActions x={x} />}
-            {props.title === "Outputs" && <GridOutputsActions x={x} />}
-          </GridItem>
-        ))}
-      </GridLayout>
-      <GridTitle>{props.title}</GridTitle>
-    </div>
-  );
-}
-
 function ControlBar(props) {
   const [
     {
@@ -79,8 +49,7 @@ function ControlBar(props) {
       modelName,
       modelSuffix,
       fontName,
-      inferenceGlyph,
-      outputs
+      inferenceGlyphRecord
     },
     dispatch
   ] = React.useContext(StateContext);
@@ -98,18 +67,29 @@ function ControlBar(props) {
 
             if (newModelName !== modelName || newModelSuffix !== modelSuffix) {
               const fetchData = async () => {
-                const modelName = newModelName,
-                  modelSuffix = newModelSuffix;
-
                 dispatch(["setModel", { modelName, modelSuffix }]);
-                await loadFontInferences(
-                  host,
-                  modelName,
-                  modelSuffix,
-                  fontName,
-                  inferenceGlyph,
-                  dispatch
-                );
+
+                inferenceGlyphRecord.sourceModelName = newModelName;
+                inferenceGlyphRecord.sourceModelSuffix = newModelSuffix;
+
+                // we can't unwind a model change right now (nor should we need to)
+                // so we don't pass a currInferenceGlyphRecord
+
+                if (inferenceGlyphRecord.source === "font") {
+                  await loadFontInferences(
+                    host,
+                    inferenceGlyphRecord,
+                    inferenceGlyphRecord,
+                    dispatch
+                  );
+                } else {
+                  await loadSvgInferences(
+                    host,
+                    inferenceGlyphRecord,
+                    inferenceGlyphRecord,
+                    dispatch
+                  );
+                }
               };
               fetchData();
             }
@@ -150,25 +130,11 @@ function ControlBar(props) {
         </DropdownButton>
       </ControlBarGroup>
       <ControlBarGroup>
-        <Button
-          variant="outline-danger"
-          onClick={() => dispatch(["clearOutputs"])}
-        >
-          Clear Outputs
-        </Button>
+        <ClearOutputsButton />
         <ControlBarSpacer />
-        <Button
-          variant="outline-success"
-          onClick={() => {
-            const outputsString = JSON.stringify(outputs);
-            prompt(
-              "Please select and copy the Outputs string below:",
-              outputsString
-            );
-          }}
-        >
-          Copy Outputs
-        </Button>
+        <PasteOutputsButton />
+        <ControlBarSpacer />
+        <CopyOutputsButton />
       </ControlBarGroup>
     </ControlBarLayout>
   );

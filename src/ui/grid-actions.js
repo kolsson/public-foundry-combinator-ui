@@ -1,6 +1,6 @@
 import React from "react";
 import { StateContext } from "../core/context";
-import { loadFontInferences } from "../core/inferences";
+import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 import { GridAction } from "./grid.js";
 
 export function GridSetOutputAction(props) {
@@ -27,23 +27,49 @@ export function GridSetOutputAction(props) {
 }
 
 export function GridFontInferenceAction(props) {
-  const [
-    { host, modelName, modelSuffix, fontName },
-    dispatch
-  ] = React.useContext(StateContext);
+  const [{ host, inferenceGlyphRecord }, dispatch] = React.useContext(
+    StateContext
+  );
+  const currInferenceGlyphRecord = inferenceGlyphRecord;
 
   return (
     <GridAction
       onClick={() => {
-        const inferenceGlyph = props.glyph;
+        const inferenceGlyphRecord = props.glyphRecord;
 
         const fetchData = async () => {
           await loadFontInferences(
             host,
-            modelName,
-            modelSuffix,
-            fontName,
-            inferenceGlyph,
+            currInferenceGlyphRecord,
+            inferenceGlyphRecord,
+            dispatch
+          );
+        };
+
+        fetchData();
+      }}
+    >
+      ↻
+    </GridAction>
+  );
+}
+
+export function GridSvgInferenceAction(props) {
+  const [{ host, inferenceGlyphRecord }, dispatch] = React.useContext(
+    StateContext
+  );
+  const currInferenceGlyphRecord = inferenceGlyphRecord;
+
+  return (
+    <GridAction
+      onClick={() => {
+        const inferenceGlyphRecord = props.glyphRecord;
+
+        const fetchData = async () => {
+          await loadSvgInferences(
+            host,
+            currInferenceGlyphRecord,
+            inferenceGlyphRecord,
             dispatch
           );
         };

@@ -12,6 +12,7 @@ export const LoadingCover = styled.div`
 
   color: white;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 

@@ -2,9 +2,9 @@ import React from "react";
 
 export const StateContext = React.createContext();
 
-const emptyGlyphSet = generateEmpyGlyphs();
+const emptyGlyphRecordSet = generateEmptyGlyphRecordSet();
 
-function generateEmpyGlyphs() {
+function generateEmptyGlyphRecordSet() {
   const out = [];
 
   let index = 0;
@@ -15,7 +15,9 @@ function generateEmpyGlyphs() {
       uni: glyph.charCodeAt(0),
       svg: "",
       source: "",
-      sourceFontName: ""
+      sourceFontName: "",
+      sourceModelName: "",
+      sourceModelSuffix: ""
     });
   }
 
@@ -23,7 +25,7 @@ function generateEmpyGlyphs() {
 }
 
 export const initialState = {
-  host: 'http://127.0.0.1:5959',
+  host: "http://127.0.0.1:5959",
 
   modelList: ["models-google_external", "models-google_internal"],
   fontList: [],
@@ -31,11 +33,11 @@ export const initialState = {
   modelName: "models-google",
   modelSuffix: "external",
   fontName: "",
-  inferenceGlyph: "",
+  inferenceGlyphRecord: null,
 
-  inputs: [...emptyGlyphSet],
-  inferences: [...emptyGlyphSet],
-  outputs: [...emptyGlyphSet],
+  inputs: [...emptyGlyphRecordSet],
+  inferences: [...emptyGlyphRecordSet],
+  outputs: [...emptyGlyphRecordSet],
 
   isInferring: false
 };
@@ -58,7 +60,7 @@ export const reducer = (state, [type, payload]) => {
       return {
         ...state,
         fontList: payload.fontList,
-        fontName: payload.fontList[0],
+        fontName: payload.fontList[0]
       };
 
     case "setModel":
@@ -72,8 +74,12 @@ export const reducer = (state, [type, payload]) => {
       return {
         ...state,
         modelName: payload.modelName,
-        modelSuffix: payload.modelSuffix,
+        modelSuffix: payload.modelSuffix
       };
+
+    //-----------------------------------------------------------------------------
+    // inputs / inferences
+    //-----------------------------------------------------------------------------
 
     case "loadFont":
       // sanity check
@@ -85,29 +91,34 @@ export const reducer = (state, [type, payload]) => {
         inputs: initialState.inputs
       };
 
-    case "loadInference":
-      // set our inferenceGlyph and infer
+    case "loadedFont":
       return {
         ...state,
-        inferenceGlyph: payload.inferenceGlyph,
-        inferences: initialState.inferences,
-        isInferring: true
+        inputs: payload.inputs
       };
 
-    //-----------------------------------------------------------------------------
-    // inputs / inferences
-    //-----------------------------------------------------------------------------
+    // we don't have a loadedFontFailed because it is fatal
 
-    case "loadedInputs":
+    case "loadInference":
+      // set our inferenceGlyphRecord and infer
       return {
         ...state,
-        inputs: payload.inputs,
+        inferenceGlyphRecord: payload.inferenceGlyphRecord,
+        // inferences: initialState.inferences, // do not clear our inferences in case of error
+        isInferring: true
       };
 
     case "loadedInferences":
       return {
         ...state,
         inferences: payload.inferences,
+        isInferring: false
+      };
+
+    case "loadedInferencesFailed":
+      return {
+        ...state,
+        inferenceGlyphRecord: payload.inferenceGlyphRecord,
         isInferring: false
       };
 
@@ -118,7 +129,7 @@ export const reducer = (state, [type, payload]) => {
     case "clearOutputs":
       return {
         ...state,
-        outputs: [...emptyGlyphSet]
+        outputs: [...emptyGlyphRecordSet]
       };
 
     case "clearOutput": {
@@ -130,7 +141,9 @@ export const reducer = (state, [type, payload]) => {
         uni: output.glyph.charCodeAt(0),
         svg: "",
         source: "",
-        sourceFontName: ""
+        sourceFontName: "",
+        sourceModelName: "",
+        sourceModelSuffix: ""
       };
 
       return {
@@ -138,6 +151,14 @@ export const reducer = (state, [type, payload]) => {
         outputs: newOutputs
       };
     }
+
+    case "setOutputs": {
+      return {
+        ...state,
+        outputs: [...payload.outputs]
+      };
+    }
+
     case "setOutput": {
       const newOutputs = [...state.outputs];
       newOutputs[payload.output.index] = payload.output;
