@@ -33,17 +33,17 @@ export async function loadFontInferences(
 
   try {
     const result = await fetch(api);
-    const data = (await result.json()).inferences;
+    const data = (await result.json());
+    if (data.error) throw data.error;
+
     const inferences = transformInferences(
       inferenceGlyphRecord,
       "fontInference", // font -> fontInference (1 step aaway from the font)
-      data
+      data.inferences
     );
 
     dispatch(["loadedInferences", { inferences }]);
   } catch (error) {
-    // test for 400 error
-
     dispatch([
       "loadedInferencesFailed",
       { inferenceGlyphRecord: currInferenceGlyphRecord }
@@ -67,18 +67,18 @@ export async function loadSvgInferences(
 
   try {
     const result = await fetch(api);
-    const data = (await result.json()).inferences;
+    const data = (await result.json());
+    if (data.error) throw data.error;
+
     const inferences = transformInferences(
       inferenceGlyphRecord,
       "svgInference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
-      data
+      data.inferences
     );
 
     dispatch(["loadedInferences", { inferences }]);
   } catch (error) {
-    // test for 400 error
-
-    dispatch([
+     dispatch([
       "loadedInferencesFailed",
       { inferenceGlyphRecord: currInferenceGlyphRecord }
     ]);
