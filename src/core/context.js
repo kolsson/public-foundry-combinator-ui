@@ -25,8 +25,8 @@ function generateEmptyGlyphRecordSet() {
       source: "",
       sourceGid: -1,
       sourceFontName: "",
-      sourceModelName: "",
-      sourceModelSuffix: ""
+      modelName: "",
+      modelSuffix: ""
     });
   }
 
@@ -54,7 +54,7 @@ export const initialState = {
 };
 
 export const reducer = (state, [type, payload]) => {
-  // console.log('Reducer action:', type, payload);
+  console.log("Reducer action:", type, payload);
 
   switch (type) {
     //-----------------------------------------------------------------------------
@@ -76,6 +76,7 @@ export const reducer = (state, [type, payload]) => {
 
     case "setModel":
       // sanity check
+
       if (
         state.modelName === payload.modelName &&
         state.modelSuffix === payload.modelSuffix
@@ -155,8 +156,8 @@ export const reducer = (state, [type, payload]) => {
         source: "",
         sourceGid: -1,
         sourceFontName: "",
-        sourceModelName: "",
-        sourceModelSuffix: ""
+        modelName: "",
+        modelSuffix: ""
       };
 
       return {

@@ -67,10 +67,13 @@ function ControlBar(props) {
 
             if (newModelName !== modelName || newModelSuffix !== modelSuffix) {
               const fetchData = async () => {
+                const modelName = newModelName;
+                const modelSuffix = newModelSuffix;
+
                 dispatch(["setModel", { modelName, modelSuffix }]);
 
-                inferenceGlyphRecord.sourceModelName = newModelName;
-                inferenceGlyphRecord.sourceModelSuffix = newModelSuffix;
+                inferenceGlyphRecord.modelName = newModelName;
+                inferenceGlyphRecord.modelSuffix = newModelSuffix;
 
                 // we can't unwind a model change right now (nor should we need to)
                 // so we don't pass a currInferenceGlyphRecord

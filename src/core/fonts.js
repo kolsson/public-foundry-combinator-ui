@@ -33,7 +33,7 @@ export async function loadFont(
     host,
     modelName,
     modelSuffix,
-      inferenceGlyphRecord,
+    inferenceGlyphRecord,
     inferenceGlyphRecord,
     dispatch
   );

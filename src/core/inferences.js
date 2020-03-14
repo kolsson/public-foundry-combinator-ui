@@ -1,6 +1,12 @@
 import { generateId } from "../core/context";
 
-function transformInferences(inferenceGlyphRecord, source, data) {
+function transformInferences(
+  modelName,
+  modelSuffix,
+  inferenceGlyphRecord,
+  source,
+  data
+) {
   const inferences = [];
 
   let index = 0;
@@ -16,8 +22,8 @@ function transformInferences(inferenceGlyphRecord, source, data) {
       source,
       sourceGid: inferenceGlyphRecord.gid,
       sourceFontName: inferenceGlyphRecord.sourceFontName,
-      sourceModelName: inferenceGlyphRecord.sourceModelName,
-      sourceModelSuffix: inferenceGlyphRecord.sourceModelSuffix
+      modelName,
+      modelSuffix,
     });
   }
 
@@ -43,8 +49,10 @@ export async function loadFontInferences(
     if (data.error) throw data.error;
 
     const inferences = transformInferences(
+      modelName,
+      modelSuffix,
       inferenceGlyphRecord,
-      "inference", // font -> fontInference (1 step aaway from the font)
+      "inference", // font -> fontInference (1 step away from the font)
       data.inferences
     );
 
@@ -79,6 +87,8 @@ export async function loadSvgInferences(
     if (data.error) throw data.error;
 
     const inferences = transformInferences(
+      modelName,
+      modelSuffix,
       inferenceGlyphRecord,
       "inference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
       data.inferences

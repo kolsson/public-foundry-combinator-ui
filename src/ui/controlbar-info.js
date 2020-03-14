@@ -55,18 +55,20 @@ const InfoSvgBox = styled.div`
 `;
 
 export function InfoGroup() {
-  const [{ inferenceGlyphRecord }] = React.useContext(StateContext);
+  const [{ modelName, modelSuffix, inferenceGlyphRecord }] = React.useContext(
+    StateContext
+  );
 
   if (!inferenceGlyphRecord) return <ControlBarGroup />;
 
   const adjustedSvg = inferenceGlyphRecord.svg.replace(/50px/g, "30px");
-  let modelNameAndSuffix = inferenceGlyphRecord.sourceModelName;
-  if (!!inferenceGlyphRecord.sourceModelSuffix)
-    modelNameAndSuffix = `${modelNameAndSuffix}_${inferenceGlyphRecord.sourceModelSuffix}`;
+  let modelNameAndSuffix = modelName;
+  if (!!modelSuffix)
+    modelNameAndSuffix = `${modelNameAndSuffix}_${modelSuffix}`;
 
   return (
     <ControlBarGroup>
-      {!!inferenceGlyphRecord.sourceModelName && (
+      {!!inferenceGlyphRecord.modelName && (
         <>
           <InfoBox>{modelNameAndSuffix}</InfoBox>
           <ControlBarSpacer />

@@ -18,13 +18,15 @@ function transformInputs(modelName, modelSuffix, fontName, data) {
       source: "font",
       sourceGid: -1,
       sourceFontName: fontName,
-      sourceModelName: modelName,
-      sourceModelSuffix: modelSuffix
+      modelName: "",
+      modelSuffix: ""
     };
 
     // find our first possible inference glyph record
     if (inferenceGlyphRecord === null && svg !== "") {
-      inferenceGlyphRecord = glyphRecord;
+      inferenceGlyphRecord = { ...glyphRecord };
+      inferenceGlyphRecord.modelName = modelName;
+      inferenceGlyphRecord.modelSuffix = modelSuffix;
     }
 
     inputs.push(glyphRecord);

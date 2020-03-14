@@ -148,16 +148,18 @@ export function Grid(props) {
               onClick={() => {
                 // present details
 
+                let modelNameAndSuffix = x.modelName;
+                if (!!x.modelSuffix)
+                  modelNameAndSuffix = `${modelNameAndSuffix}_${x.modelSuffix}`;
+
                 alert(`gid: ${x.gid}
-glyph: ${x.glyph}
-uni: ${x.uni}
+glyph: ${x.glyph} (${x.uni})
+model: ${modelNameAndSuffix}
 svg: ${!!x.svg}
 
 source: ${x.source}
 sourceGid: ${x.sourceGid}
-sourceFontName: ${x.sourceFontName}
-sourceModelName: ${x.sourceModelName}
-sourceModelSuffix: ${x.sourceModelSuffix}`);
+sourceFontName: ${x.sourceFontName}`);
               }}
             ></GridSvg>
             <GridGlyph>{x.glyph}</GridGlyph>
