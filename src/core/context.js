@@ -34,7 +34,8 @@ function generateEmptyGlyphRecordSet() {
 }
 
 export const initialState = {
-  host: "http://10.0.1.210:5959", // lyra
+  host: "http://67.201.10.48:5959", // lyra WAN
+  // host: "http://10.0.1.210:5959", // lyra LAN
   // host: "http://127.0.0.1:5959", // local
 
   modelList: ["models-v1", "models-google_external", "models-google_internal"],
