@@ -33,7 +33,7 @@ export async function loadFontInferences(
   dispatch
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
-  const ms = modelSuffix || "0";
+  const ms = modelSuffix || "-";
 
   const api = `${host}/infer/${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
 
@@ -67,7 +67,7 @@ export async function loadSvgInferences(
   dispatch
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
-  const ms = modelSuffix || "0";
+  const ms = modelSuffix || "-";
 
   const api = `${host}/infer/${modelName}/${ms}/${
     inferenceGlyphRecord.glyph
