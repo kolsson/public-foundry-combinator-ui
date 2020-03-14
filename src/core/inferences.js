@@ -1,3 +1,5 @@
+import { generateId } from "../core/context";
+
 function transformInferences(inferenceGlyphRecord, source, data) {
   const inferences = [];
 
@@ -6,11 +8,13 @@ function transformInferences(inferenceGlyphRecord, source, data) {
     const svg = data[glyph];
 
     inferences.push({
+      gid: generateId(),
       index: index++,
       glyph,
       uni: glyph.charCodeAt(0),
       svg,
       source,
+      sourceGid: inferenceGlyphRecord.gid,
       sourceFontName: inferenceGlyphRecord.sourceFontName,
       sourceModelName: inferenceGlyphRecord.sourceModelName,
       sourceModelSuffix: inferenceGlyphRecord.sourceModelSuffix
@@ -22,23 +26,25 @@ function transformInferences(inferenceGlyphRecord, source, data) {
 
 export async function loadFontInferences(
   host,
+  modelName,
+  modelSuffix,
   currInferenceGlyphRecord,
   inferenceGlyphRecord,
   dispatch
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
-  const ms = inferenceGlyphRecord.sourceModelSuffix || "0";
+  const ms = modelSuffix || "0";
 
-  const api = `${host}/infer/${inferenceGlyphRecord.sourceModelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
+  const api = `${host}/infer/${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
 
   try {
     const result = await fetch(api);
-    const data = (await result.json());
+    const data = await result.json();
     if (data.error) throw data.error;
 
     const inferences = transformInferences(
       inferenceGlyphRecord,
-      "fontInference", // font -> fontInference (1 step aaway from the font)
+      "inference", // font -> fontInference (1 step aaway from the font)
       data.inferences
     );
 
@@ -54,31 +60,33 @@ export async function loadFontInferences(
 
 export async function loadSvgInferences(
   host,
+  modelName,
+  modelSuffix,
   currInferenceGlyphRecord,
   inferenceGlyphRecord,
   dispatch
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
-  const ms = inferenceGlyphRecord.sourceModelSuffix || "0";
+  const ms = modelSuffix || "0";
 
-  const api = `${host}/infer/${inferenceGlyphRecord.sourceModelName}/${ms}/${
+  const api = `${host}/infer/${modelName}/${ms}/${
     inferenceGlyphRecord.glyph
   }?svg=${encodeURIComponent(inferenceGlyphRecord.svg)}`;
 
   try {
     const result = await fetch(api);
-    const data = (await result.json());
+    const data = await result.json();
     if (data.error) throw data.error;
 
     const inferences = transformInferences(
       inferenceGlyphRecord,
-      "svgInference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
+      "inference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
       data.inferences
     );
 
     dispatch(["loadedInferences", { inferences }]);
   } catch (error) {
-     dispatch([
+    dispatch([
       "loadedInferencesFailed",
       { inferenceGlyphRecord: currInferenceGlyphRecord }
     ]);

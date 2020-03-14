@@ -1,3 +1,5 @@
+import { generateId } from "../core/context";
+
 function transformInputs(modelName, modelSuffix, fontName, data) {
   const inputs = [];
   let inferenceGlyphRecord = null;
@@ -6,12 +8,15 @@ function transformInputs(modelName, modelSuffix, fontName, data) {
   for (let glyph in data) {
     const svg = data[glyph];
 
+    // generate a new record
     const glyphRecord = {
+      gid: generateId(),
       index: index++,
       glyph,
       uni: glyph.charCodeAt(0),
       svg,
       source: "font",
+      sourceGid: -1,
       sourceFontName: fontName,
       sourceModelName: modelName,
       sourceModelSuffix: modelSuffix

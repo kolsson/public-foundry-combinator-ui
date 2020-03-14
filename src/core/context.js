@@ -4,17 +4,26 @@ export const StateContext = React.createContext();
 
 const emptyGlyphRecordSet = generateEmptyGlyphRecordSet();
 
+// we can't use a regular variable or the compiler will complain
+
+export function generateId() {
+  if (isNaN(window.currentGid)) window.currentGid = 100;
+  return window.currentGid++;
+}
+
 function generateEmptyGlyphRecordSet() {
   const out = [];
 
   let index = 0;
   for (let glyph of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
     out.push({
+      gid: generateId(),
       index: index++,
       glyph,
       uni: glyph.charCodeAt(0),
       svg: "",
       source: "",
+      sourceGid: -1,
       sourceFontName: "",
       sourceModelName: "",
       sourceModelSuffix: ""
@@ -136,11 +145,13 @@ export const reducer = (state, [type, payload]) => {
       const output = state.outputs[payload.index];
       const newOutputs = [...state.outputs];
       newOutputs[payload.index] = {
+        gid: generateId(),
         index: output.index,
         glyph: output.glyph,
         uni: output.glyph.charCodeAt(0),
         svg: "",
         source: "",
+        sourceGid: -1,
         sourceFontName: "",
         sourceModelName: "",
         sourceModelSuffix: ""

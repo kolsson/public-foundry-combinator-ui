@@ -78,6 +78,8 @@ function ControlBar(props) {
                 if (inferenceGlyphRecord.source === "font") {
                   await loadFontInferences(
                     host,
+                    modelName,
+                    modelSuffix,
                     inferenceGlyphRecord,
                     inferenceGlyphRecord,
                     dispatch
@@ -85,6 +87,8 @@ function ControlBar(props) {
                 } else {
                   await loadSvgInferences(
                     host,
+                    modelName,
+                    modelSuffix,
                     inferenceGlyphRecord,
                     inferenceGlyphRecord,
                     dispatch

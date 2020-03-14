@@ -71,12 +71,7 @@ export const GridActionSpacer = styled.div`
 export function GridInputsActions(props) {
   return (
     <GridActions>
-      <GridSetOutputAction
-        index={props.x.index}
-        glyph={props.x.glyph}
-        svg={props.x.svg}
-        source={props.x.source}
-      />
+      <GridSetOutputAction glyphRecord={props.x} />
       <GridActionSpacer />
       <GridFontInferenceAction glyphRecord={props.x} />
     </GridActions>
@@ -86,12 +81,7 @@ export function GridInputsActions(props) {
 export function GridInferencesActions(props) {
   return (
     <GridActions>
-      <GridSetOutputAction
-        index={props.x.index}
-        glyph={props.x.glyph}
-        svg={props.x.svg}
-        source={props.x.source}
-      />
+      <GridSetOutputAction glyphRecord={props.x} />
       <GridActionSpacer />
       <GridSvgInferenceAction glyphRecord={props.x} />
     </GridActions>
@@ -99,11 +89,29 @@ export function GridInferencesActions(props) {
 }
 
 export function GridOutputsActions(props) {
+  if (!props.x.svg) {
+    return (
+      <GridActions>
+        <GridAction>&nbsp;</GridAction>
+      </GridActions>
+    );
+  }
+
   return (
     <GridActions>
       <GridClearOutputAction index={props.x.index} />
-      <GridActionSpacer />
-      <GridSvgInferenceAction glyphRecord={props.x} />
+      {props.x.source === "font" && (
+        <>
+          <GridActionSpacer />
+          <GridFontInferenceAction glyphRecord={props.x} />
+        </>
+      )}
+      {props.x.source === "inference" && (
+        <>
+          <GridActionSpacer />
+          <GridSvgInferenceAction glyphRecord={props.x} />
+        </>
+      )}
     </GridActions>
   );
 }
@@ -114,6 +122,7 @@ function checkSelected(title, inferenceGlyphRecord, x) {
   if (inferenceGlyphRecord) {
     switch (title) {
       case "Outputs":
+        selected = inferenceGlyphRecord.gid === x.gid;
         break;
 
       case "Inferences":
@@ -129,18 +138,6 @@ function checkSelected(title, inferenceGlyphRecord, x) {
           inferenceGlyphRecord.source === "font" &&
           inferenceGlyphRecord.sourceFontName === x.sourceFontName &&
           inferenceGlyphRecord.glyph === x.glyph;
-
-        // if (x.glyph === '0')
-        //   console.warn(
-        //     false,
-        //     inferenceGlyphRecord.source,
-        //     inferenceGlyphRecord.sourceFontName,
-        //     inferenceGlyphRecord.glyph,
-        //     x.sourceFontName,
-        //     x.glyph,
-        //     inferenceGlyphRecord.sourceFontName === x.sourceFontName,
-        //     inferenceGlyphRecord.glyph === x.glyph
-        //   );
     }
   }
 
@@ -158,6 +155,20 @@ export function Grid(props) {
             <GridSvg
               selected={checkSelected(props.title, inferenceGlyphRecord, x)}
               dangerouslySetInnerHTML={{ __html: x.svg }}
+              onClick={() => {
+                // present details
+
+                alert(`gid: ${x.gid}
+glyph: ${x.glyph}
+uni: ${x.uni}
+svg: ${!!x.svg}
+
+source: ${x.source}
+sourceGid: ${x.sourceGid}
+sourceFontName: ${x.sourceFontName}
+sourceModelName: ${x.sourceModelName}
+sourceModelSuffix: ${x.sourceModelSuffix}`);
+              }}
             ></GridSvg>
             <GridGlyph>{x.glyph}</GridGlyph>
             {props.title === "Inputs" && <GridInputsActions x={x} />}

@@ -4,21 +4,13 @@ import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 import { GridAction } from "./grid.js";
 
 export function GridSetOutputAction(props) {
-  const [{ fontName }, dispatch] = React.useContext(StateContext);
+  const [, dispatch] = React.useContext(StateContext);
 
   return (
     <GridAction
       onClick={() => {
-        const output = {
-          index: props.index,
-          glyph: props.glyph,
-          uni: props.glyph.charCodeAt(0),
-          svg: props.svg,
-          source: props.source,
-          sourceFontName: fontName
-        };
-
-        dispatch(["setOutput", { output }]);
+        // make a copy
+        dispatch(["setOutput", { output: { ...props.glyphRecord } }]);
       }}
     >
       ↓
@@ -27,9 +19,10 @@ export function GridSetOutputAction(props) {
 }
 
 export function GridFontInferenceAction(props) {
-  const [{ host, inferenceGlyphRecord }, dispatch] = React.useContext(
-    StateContext
-  );
+  const [
+    { host, modelName, modelSuffix, inferenceGlyphRecord },
+    dispatch
+  ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
 
   return (
@@ -40,6 +33,8 @@ export function GridFontInferenceAction(props) {
         const fetchData = async () => {
           await loadFontInferences(
             host,
+            modelName,
+            modelSuffix,
             currInferenceGlyphRecord,
             inferenceGlyphRecord,
             dispatch
@@ -55,9 +50,10 @@ export function GridFontInferenceAction(props) {
 }
 
 export function GridSvgInferenceAction(props) {
-  const [{ host, inferenceGlyphRecord }, dispatch] = React.useContext(
-    StateContext
-  );
+  const [
+    { host, modelName, modelSuffix, inferenceGlyphRecord },
+    dispatch
+  ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
 
   return (
@@ -68,6 +64,8 @@ export function GridSvgInferenceAction(props) {
         const fetchData = async () => {
           await loadSvgInferences(
             host,
+            modelName,
+            modelSuffix,
             currInferenceGlyphRecord,
             inferenceGlyphRecord,
             dispatch
