@@ -121,23 +121,12 @@ function checkSelected(title, inferenceGlyphRecord, x) {
 
   if (inferenceGlyphRecord) {
     switch (title) {
+      case "Inputs":
       case "Outputs":
         selected = inferenceGlyphRecord.gid === x.gid;
         break;
 
-      case "Inferences":
-        break;
-
-      case "Inputs":
       default:
-        // a. our current inferenceGlyphRecord says we are inferring from a font
-        // b. the current inferenceGlyphRecord glyph is the same as this glpyhRecord font
-        // c. the current inferenceGlyphRecord fontName is the same as this glpyhRecord fontName
-
-        selected =
-          inferenceGlyphRecord.source === "font" &&
-          inferenceGlyphRecord.sourceFontName === x.sourceFontName &&
-          inferenceGlyphRecord.glyph === x.glyph;
     }
   }
 
@@ -153,6 +142,7 @@ export function Grid(props) {
         {props.data.map(x => (
           <GridItem key={x.glyph}>
             <GridSvg
+              style={{ cursor: "pointer" }}
               selected={checkSelected(props.title, inferenceGlyphRecord, x)}
               dangerouslySetInnerHTML={{ __html: x.svg }}
               onClick={() => {

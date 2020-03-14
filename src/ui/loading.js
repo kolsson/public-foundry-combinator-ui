@@ -18,12 +18,12 @@ export const LoadingCover = styled.div`
 
   background: repeating-linear-gradient(
     45deg,
-    #606dbc,
-    #606dbc 10px,
-    #465298 10px,
-    #465298 20px
+    rgb(96,109,188, 0.75),
+    rgb(96,109,188, 0.75) 10px,
+    rgb(70,82,152, 0.75) 10px,
+    rgb(70,82,152, 0.75) 20px
   );
-  opacity: 0.75;
+
   z-index: 1000;
 `;
 
