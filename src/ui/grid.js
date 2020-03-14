@@ -148,7 +148,8 @@ export function Grid(props) {
               onClick={() => {
                 // present details
 
-                let modelNameAndSuffix = x.modelName;
+                let modelNameAndSuffix =
+                  x.source === "font" ? "N/A" : x.modelName;
                 if (!!x.modelSuffix)
                   modelNameAndSuffix = `${modelNameAndSuffix}_${x.modelSuffix}`;
 

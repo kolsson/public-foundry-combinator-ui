@@ -54,26 +54,15 @@ const InfoSvgBox = styled.div`
   border-bottom-right-radius: 5px;
 `;
 
-export function InfoGroup() {
-  const [{ modelName, modelSuffix, inferenceGlyphRecord }] = React.useContext(
-    StateContext
-  );
+export function InfoInferenceGlyphRecordGroup() {
+  const [{ inferenceGlyphRecord }] = React.useContext(StateContext);
 
   if (!inferenceGlyphRecord) return <ControlBarGroup />;
 
   const adjustedSvg = inferenceGlyphRecord.svg.replace(/50px/g, "30px");
-  let modelNameAndSuffix = modelName;
-  if (!!modelSuffix)
-    modelNameAndSuffix = `${modelNameAndSuffix}_${modelSuffix}`;
 
   return (
-    <ControlBarGroup>
-      {!!inferenceGlyphRecord.modelName && (
-        <>
-          <InfoBox>{modelNameAndSuffix}</InfoBox>
-          <ControlBarSpacer />
-        </>
-      )}
+    <>
       {!!inferenceGlyphRecord.sourceFontName && (
         <>
           <InfoBox>{inferenceGlyphRecord.sourceFontName}</InfoBox>
@@ -86,6 +75,26 @@ export function InfoGroup() {
           <InfoSvgBox dangerouslySetInnerHTML={{ __html: adjustedSvg }} />
         </>
       )}
+    </>
+  );
+}
+
+export function InfoGroup() {
+  const [{ modelName, modelSuffix }] = React.useContext(StateContext);
+
+  let modelNameAndSuffix = modelName;
+  if (!!modelSuffix)
+    modelNameAndSuffix = `${modelNameAndSuffix}_${modelSuffix}`;
+
+  return (
+    <ControlBarGroup>
+      {!!modelName && (
+        <>
+          <InfoBox>{modelNameAndSuffix}</InfoBox>
+          <ControlBarSpacer />
+        </>
+      )}
+      <InfoInferenceGlyphRecordGroup />
     </ControlBarGroup>
   );
 }
