@@ -34,7 +34,7 @@ function generateEmptyGlyphRecordSet() {
 }
 
 export const initialState = {
-  host: "http://67.201.10.48:5959", // lyra WAN
+  host: "http://67.201.10.48:5959/api", // lyra WAN
   // host: "http://10.0.1.210:5959", // lyra LAN
   // host: "http://127.0.0.1:5959", // local
 
