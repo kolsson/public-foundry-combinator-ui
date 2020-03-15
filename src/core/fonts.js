@@ -6,6 +6,8 @@ export async function loadFontList(host, dispatch) {
   const result = await fetch(`${host}/fonts`);
 
   const fontList = (await result.json()).fonts;
+  fontList.sort()
+
   dispatch(["loadedFontList", { fontList }]);
 
   return fontList;
