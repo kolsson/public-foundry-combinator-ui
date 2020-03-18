@@ -35,15 +35,22 @@ function generateEmptyGlyphRecordSet() {
 
 export const initialState = {
   host: "http://67.201.10.48:5959/api", // lyra WAN
-  // host: "http://10.0.1.210:5959", // lyra LAN
-  // host: "http://127.0.0.1:5959", // local
+  // host: "http://10.0.1.210:5959/api", // lyra LAN
+  // host: "http://127.0.0.1:5959/api", // local
 
-  modelList: ["models-v1", "models-google_external", "models-google_internal"],
+  modelList: [
+    "models-v1",
+    "models-v1b",
+    "models-pf1",
+    "models-google_external",
+    "models-google_internal"
+  ],
   fontList: [],
 
-  modelName: "models-v1",
+  modelName: "models-v1b",
   modelSuffix: "",
   fontName: "",
+  inferenceType: "svg",
   inferenceGlyphRecord: null,
 
   inputs: [...emptyGlyphRecordSet],
@@ -58,7 +65,7 @@ export const reducer = (state, [type, payload]) => {
 
   switch (type) {
     //-----------------------------------------------------------------------------
-    // model / font
+    // fontlist / model / inferencetype
     //-----------------------------------------------------------------------------
 
     case "loadingFontList":
@@ -87,6 +94,12 @@ export const reducer = (state, [type, payload]) => {
         ...state,
         modelName: payload.modelName,
         modelSuffix: payload.modelSuffix
+      };
+
+    case "setInferenceType":
+      return {
+        ...state,
+        inferenceType: payload.inferenceType
       };
 
     //-----------------------------------------------------------------------------

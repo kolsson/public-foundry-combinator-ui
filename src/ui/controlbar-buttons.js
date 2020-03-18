@@ -7,7 +7,7 @@ export function ClearOutputsButton(props) {
 
   return (
     <Button variant="outline-danger" onClick={() => dispatch(["clearOutputs"])}>
-      Clear Outputs
+      Clear
     </Button>
   );
 }
@@ -18,22 +18,25 @@ export function PasteOutputsButton(props) {
     <Button
       variant="outline-success"
       onClick={() => {
-        const outputsString = prompt("Please paste your Outputs string below:", "");
+        const outputsString = prompt(
+          "Please paste your Outputs string below:",
+          ""
+        );
 
         if (!!outputsString) {
           try {
             const outputs = JSON.parse(outputsString);
-  
+
             // do proper model checking here
 
             dispatch(["setOutputs", { outputs }]);
           } catch (error) {
-            alert("Your Outputs were invalid!")
+            alert("Your Outputs were invalid!");
           }
-        } 
+        }
       }}
     >
-      Paste Outputs
+      Paste
     </Button>
   );
 }
@@ -45,13 +48,10 @@ export function CopyOutputsButton(props) {
       variant="outline-success"
       onClick={() => {
         const outputsString = JSON.stringify(outputs);
-        prompt(
-          "Please copy the Outputs string below:",
-          outputsString
-        );
+        prompt("Please copy the Outputs string below:", outputsString);
       }}
     >
-      Copy Outputs
+      Copy
     </Button>
   );
 }

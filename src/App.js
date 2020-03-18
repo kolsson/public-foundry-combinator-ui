@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import {
+  Dropdown,
+  DropdownButton,
+  ToggleButtonGroup,
+  ToggleButton
+} from "react-bootstrap";
 
 import { StateContext, reducer, initialState } from "./core/context";
 import { loadFontList, loadFont } from "./core/fonts";
@@ -49,6 +54,7 @@ function ControlBar(props) {
       modelName,
       modelSuffix,
       fontName,
+      inferenceType,
       inferenceGlyphRecord
     },
     dispatch
@@ -62,7 +68,7 @@ function ControlBar(props) {
           variant="outline-primary"
           id="dropdown-basic-button"
           title="Model"
-          onSelect={(ek, e) => {
+          onSelect={ek => {
             const [newModelName, newModelSuffix] = modelList[ek].split("_");
 
             if (newModelName !== modelName || newModelSuffix !== modelSuffix) {
@@ -113,7 +119,7 @@ function ControlBar(props) {
           variant="outline-primary"
           id="dropdown-basic-button"
           title="Font"
-          onSelect={(ek, e) => {
+          onSelect={ek => {
             if (fontName !== fontList[ek]) {
               const fetchData = async () => {
                 const fontName = fontList[ek]; // override our context
@@ -135,6 +141,30 @@ function ControlBar(props) {
             </Dropdown.Item>
           ))}
         </DropdownButton>
+        <ControlBarSpacer />
+        <ToggleButtonGroup
+          type="radio"
+          name="type"
+          defaultValue={inferenceType}
+          onChange={val => {
+            dispatch(["setInferenceType", { inferenceType: val }]);
+          }}
+        >
+          <ToggleButton
+            value="svg"
+            variant="outline-primary"
+            style={{ cursor: "pointer" }}
+          >
+            SVG
+          </ToggleButton>
+          <ToggleButton
+            value="bmp"
+            variant="outline-primary"
+            style={{ cursor: "pointer" }}
+          >
+            BMP
+          </ToggleButton>
+        </ToggleButtonGroup>
       </ControlBarGroup>
       <ControlBarGroup>
         <ClearOutputsButton />
