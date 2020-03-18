@@ -4,8 +4,9 @@ import { loadFontInferences } from "./inferences";
 export async function loadFontList(host, dispatch) {
   dispatch(["loadingFontList"]);
   const result = await fetch(`${host}/fonts`);
+  const data = await result.json();
 
-  const fontList = (await result.json()).fonts;
+  const fontList = data.fonts;
   fontList.sort()
 
   dispatch(["loadedFontList", { fontList }]);

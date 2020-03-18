@@ -1,7 +1,14 @@
 .App {
   text-align: center;
+
+  min-width: 1024px;
 }
 
 .App-link {
   color: #61dafb;
+}
+
+/* fix for incorrectly sized dropdown buttons */
+.dropdown > button {
+  height: 100%
 }

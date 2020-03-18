@@ -1,7 +1,23 @@
 import React from "react";
+import styled from "styled-components";
+
 import { StateContext } from "../core/context";
-import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 import { GridAction } from "./grid.js";
+
+const Check = styled.span`
+  font-size: 20px;
+  line-height: 24px;
+`;
+
+const X = styled.span`
+  font-size: 20px;
+  line-height: 24px;
+`;
+
+const Info = styled.span`
+  font-size: 18px;
+  line-height: 18px;
+`;
 
 export function GridSetOutputAction(props) {
   const [, dispatch] = React.useContext(StateContext);
@@ -13,69 +29,34 @@ export function GridSetOutputAction(props) {
         dispatch(["setOutput", { output: { ...props.glyphRecord } }]);
       }}
     >
-      ↓
+      <Check>✓</Check>
     </GridAction>
   );
 }
 
-export function GridFontInferenceAction(props) {
-  const [
-    { host, modelName, modelSuffix, inferenceGlyphRecord },
-    dispatch
-  ] = React.useContext(StateContext);
-  const currInferenceGlyphRecord = inferenceGlyphRecord;
+export function GridInfoAction(props) {
+  const x = props.glyphRecord;
 
   return (
     <GridAction
       onClick={() => {
-        const inferenceGlyphRecord = props.glyphRecord;
+        // present details
 
-        const fetchData = async () => {
-          await loadFontInferences(
-            host,
-            modelName,
-            modelSuffix,
-            currInferenceGlyphRecord,
-            inferenceGlyphRecord,
-            dispatch
-          );
-        };
+        let modelNameAndSuffix = x.source === "font" ? "N/A" : x.modelName;
+        if (!!x.modelSuffix)
+          modelNameAndSuffix = `${modelNameAndSuffix}_${x.modelSuffix}`;
 
-        fetchData();
+        alert(`gid: ${x.gid}
+glyph: ${x.glyph} (${x.uni})
+model: ${modelNameAndSuffix}
+svg: ${!!x.svg}
+
+source: ${x.source}
+sourceGid: ${x.sourceGid}
+sourceFontName: ${x.sourceFontName}`);
       }}
     >
-      ↻
-    </GridAction>
-  );
-}
-
-export function GridSvgInferenceAction(props) {
-  const [
-    { host, modelName, modelSuffix, inferenceGlyphRecord },
-    dispatch
-  ] = React.useContext(StateContext);
-  const currInferenceGlyphRecord = inferenceGlyphRecord;
-
-  return (
-    <GridAction
-      onClick={() => {
-        const inferenceGlyphRecord = props.glyphRecord;
-
-        const fetchData = async () => {
-          await loadSvgInferences(
-            host,
-            modelName,
-            modelSuffix,
-            currInferenceGlyphRecord,
-            inferenceGlyphRecord,
-            dispatch
-          );
-        };
-
-        fetchData();
-      }}
-    >
-      ↻
+      <Info>ⓘ</Info>
     </GridAction>
   );
 }
@@ -89,7 +70,7 @@ export function GridClearOutputAction(props) {
         dispatch(["clearOutput", { index: props.index }]);
       }}
     >
-      ⨉
+      <X>✗</X>
     </GridAction>
   );
 }
