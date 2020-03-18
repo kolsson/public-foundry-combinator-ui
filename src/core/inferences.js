@@ -23,7 +23,7 @@ function transformInferences(
       sourceGid: inferenceGlyphRecord.gid,
       sourceFontName: inferenceGlyphRecord.sourceFontName,
       modelName,
-      modelSuffix,
+      modelSuffix
     });
   }
 
@@ -77,12 +77,18 @@ export async function loadSvgInferences(
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
 
-  const api = `${host}/infer/${modelName}/${ms}/${
-    inferenceGlyphRecord.glyph
-  }?svg=${encodeURIComponent(inferenceGlyphRecord.svg)}`;
+  const api = `${host}/infer/${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
 
   try {
-    const result = await fetch(api);
+    // must use POST
+    const result = await fetch(api, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        svg: inferenceGlyphRecord.svg
+      })
+    });
+
     const data = await result.json();
     if (data.error) throw data.error;
 
