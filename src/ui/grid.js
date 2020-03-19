@@ -97,7 +97,7 @@ export const GridActionSpacer = styled.div`
 
 export function GridFontInference(props) {
   const [
-    { host, modelName, modelSuffix, inferenceGlyphRecord },
+    { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
     dispatch
   ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
@@ -112,6 +112,7 @@ export function GridFontInference(props) {
             host,
             modelName,
             modelSuffix,
+            inferenceType,
             currInferenceGlyphRecord,
             inferenceGlyphRecord,
             dispatch

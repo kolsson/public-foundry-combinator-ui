@@ -3,6 +3,7 @@ import { generateId } from "../core/context";
 function transformInferences(
   modelName,
   modelSuffix,
+  inferenceType,
   inferenceGlyphRecord,
   source,
   data
@@ -11,14 +12,13 @@ function transformInferences(
 
   let index = 0;
   for (let glyph in data) {
-    const svg = data[glyph];
-
     inferences.push({
       gid: generateId(),
       index: index++,
       glyph,
       uni: glyph.charCodeAt(0),
-      svg,
+      svg: inferenceType === 'svg' ? data[glyph] : '',
+      bitmap: inferenceType === 'bitmap' ? data[glyph] : '',
       source,
       sourceGid: inferenceGlyphRecord.gid,
       sourceFontName: inferenceGlyphRecord.sourceFontName,
@@ -34,6 +34,7 @@ export async function loadFontInferences(
   host,
   modelName,
   modelSuffix,
+  inferenceType,
   currInferenceGlyphRecord,
   inferenceGlyphRecord,
   dispatch
@@ -41,7 +42,7 @@ export async function loadFontInferences(
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
 
-  const api = `${host}/infer/${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
+  const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
 
   try {
     const result = await fetch(api);
@@ -51,6 +52,7 @@ export async function loadFontInferences(
     const inferences = transformInferences(
       modelName,
       modelSuffix,
+      inferenceType,
       inferenceGlyphRecord,
       "inference", // font -> fontInference (1 step away from the font)
       data.inferences
@@ -70,6 +72,7 @@ export async function loadSvgInferences(
   host,
   modelName,
   modelSuffix,
+  inferenceType,
   currInferenceGlyphRecord,
   inferenceGlyphRecord,
   dispatch
@@ -77,7 +80,7 @@ export async function loadSvgInferences(
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
 
-  const api = `${host}/infer/${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
+  const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
 
   try {
     // must use POST
@@ -95,6 +98,7 @@ export async function loadSvgInferences(
     const inferences = transformInferences(
       modelName,
       modelSuffix,
+      inferenceType,
       inferenceGlyphRecord,
       "inference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
       data.inferences

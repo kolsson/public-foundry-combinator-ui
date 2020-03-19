@@ -59,7 +59,9 @@ export function InfoInferenceGlyphRecordGroup() {
 
   if (!inferenceGlyphRecord) return <ControlBarGroup />;
 
-  const adjustedSvg = inferenceGlyphRecord.svg.replace(/50px/g, "30px");
+  let __html = ''
+
+  if (inferenceGlyphRecord.svg) __html = inferenceGlyphRecord.svg.replace(/50px/g, "30px");
 
   return (
     <>
@@ -72,7 +74,7 @@ export function InfoInferenceGlyphRecordGroup() {
       {!!inferenceGlyphRecord.glyph && (
         <>
           <InfoGlyphBox>{inferenceGlyphRecord.glyph}</InfoGlyphBox>
-          <InfoSvgBox dangerouslySetInnerHTML={{ __html: adjustedSvg }} />
+          <InfoSvgBox dangerouslySetInnerHTML={{ __html }} />
         </>
       )}
     </>

@@ -1,30 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import {
-  Dropdown,
-  DropdownButton,
-  ToggleButtonGroup,
-  ToggleButton
-} from "react-bootstrap";
 
 import { StateContext, reducer, initialState } from "./core/context";
 import { loadFontList, loadFont } from "./core/fonts";
-import { loadFontInferences, loadSvgInferences } from "./core/inferences";
 
 import { Grid } from "./ui/grid";
-
-import {
-  ControlBarLayout,
-  ControlBarGroup,
-  ControlBarSpacer
-} from "./ui/controlbar";
-import {
-  ClearOutputsButton,
-  PasteOutputsButton,
-  CopyOutputsButton
-} from "./ui/controlbar-buttons";
-import { InfoGroup } from "./ui/controlbar-info";
-
+import { PrimaryControlBar, SecondaryControlBar } from "./ui/controlbar";
 import { LoadingCover, LoadingText } from "./ui/loading";
 
 import "./App.css";
@@ -35,7 +16,7 @@ import "./App.css";
 
 const GridsContainerLayout = styled.div`
   position: absolute;
-  top: 60px;
+  top: 120px;
   left: 0;
   bottom: 0;
   right: 0;
@@ -45,138 +26,6 @@ const GridsContainerLayout = styled.div`
   justify-content: space-between;
 `;
 
-function ControlBar(props) {
-  const [
-    {
-      host,
-      modelList,
-      fontList,
-      modelName,
-      modelSuffix,
-      fontName,
-      inferenceType,
-      inferenceGlyphRecord
-    },
-    dispatch
-  ] = React.useContext(StateContext);
-
-  return (
-    <ControlBarLayout>
-      <InfoGroup />
-      <ControlBarGroup>
-        <DropdownButton
-          variant="outline-primary"
-          id="dropdown-basic-button"
-          title="Model"
-          onSelect={ek => {
-            const [newModelName, newModelSuffix] = modelList[ek].split("_");
-
-            if (newModelName !== modelName || newModelSuffix !== modelSuffix) {
-              const fetchData = async () => {
-                const modelName = newModelName;
-                const modelSuffix = newModelSuffix;
-
-                dispatch(["setModel", { modelName, modelSuffix }]);
-
-                inferenceGlyphRecord.modelName = newModelName;
-                inferenceGlyphRecord.modelSuffix = newModelSuffix;
-
-                // we can't unwind a model change right now (nor should we need to)
-                // so we don't pass a currInferenceGlyphRecord
-
-                if (inferenceGlyphRecord.source === "font") {
-                  await loadFontInferences(
-                    host,
-                    modelName,
-                    modelSuffix,
-                    inferenceGlyphRecord,
-                    inferenceGlyphRecord,
-                    dispatch
-                  );
-                } else {
-                  await loadSvgInferences(
-                    host,
-                    modelName,
-                    modelSuffix,
-                    inferenceGlyphRecord,
-                    inferenceGlyphRecord,
-                    dispatch
-                  );
-                }
-              };
-              fetchData();
-            }
-          }}
-        >
-          {modelList.map((option, i) => (
-            <Dropdown.Item key={i} eventKey={i}>
-              {option}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        <ControlBarSpacer />
-        <DropdownButton
-          variant="outline-primary"
-          id="dropdown-basic-button"
-          title="Font"
-          onSelect={ek => {
-            if (fontName !== fontList[ek]) {
-              const fetchData = async () => {
-                const fontName = fontList[ek]; // override our context
-                await loadFont(
-                  host,
-                  modelName,
-                  modelSuffix,
-                  fontName,
-                  dispatch
-                );
-              };
-              fetchData();
-            }
-          }}
-        >
-          {fontList.map((option, i) => (
-            <Dropdown.Item key={i} eventKey={i}>
-              {option}
-            </Dropdown.Item>
-          ))}
-        </DropdownButton>
-        <ControlBarSpacer />
-        <ToggleButtonGroup
-          type="radio"
-          name="type"
-          defaultValue={inferenceType}
-          onChange={val => {
-            dispatch(["setInferenceType", { inferenceType: val }]);
-          }}
-        >
-          <ToggleButton
-            value="svg"
-            variant="outline-primary"
-            style={{ cursor: "pointer" }}
-          >
-            SVG
-          </ToggleButton>
-          <ToggleButton
-            value="bmp"
-            variant="outline-primary"
-            style={{ cursor: "pointer" }}
-          >
-            BMP
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </ControlBarGroup>
-      <ControlBarGroup>
-        <ClearOutputsButton />
-        <ControlBarSpacer />
-        <PasteOutputsButton />
-        <ControlBarSpacer />
-        <CopyOutputsButton />
-      </ControlBarGroup>
-    </ControlBarLayout>
-  );
-}
-
 function Container(props) {
   const [
     {
@@ -184,6 +33,7 @@ function Container(props) {
       modelName,
       modelSuffix,
       fontName,
+      inferenceType,
       inputs,
       inferences,
       outputs,
@@ -198,7 +48,14 @@ function Container(props) {
     const fetchData = async () => {
       const fontList = await loadFontList(host, dispatch);
       const fontName = fontList[0]; // override our context
-      await loadFont(host, modelName, modelSuffix, fontName, dispatch);
+      await loadFont(
+        host,
+        modelName,
+        modelSuffix,
+        fontName,
+        inferenceType,
+        dispatch
+      );
     };
 
     fetchData();
@@ -211,7 +68,8 @@ function Container(props) {
           <LoadingText>Inferring...</LoadingText>
         </LoadingCover>
       )}
-      <ControlBar fontName={fontName} />
+      <PrimaryControlBar />
+      <SecondaryControlBar />
       <GridsContainerLayout>
         <Grid data={inputs} fontName={fontName} title="Inputs" />
         <Grid data={inferences} title="Inferences" />

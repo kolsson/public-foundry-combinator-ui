@@ -7,7 +7,7 @@ export async function loadFontList(host, dispatch) {
   const data = await result.json();
 
   const fontList = data.fonts;
-  fontList.sort()
+  fontList.sort();
 
   dispatch(["loadedFontList", { fontList }]);
 
@@ -19,6 +19,7 @@ export async function loadFont(
   modelName,
   modelSuffix,
   fontName,
+  inferenceType,
   dispatch
 ) {
   const inferenceGlyphRecord = await loadInputs(
@@ -36,6 +37,7 @@ export async function loadFont(
     host,
     modelName,
     modelSuffix,
+    inferenceType,
     inferenceGlyphRecord,
     inferenceGlyphRecord,
     dispatch

@@ -1,13 +1,14 @@
 import React from "react";
-import { StateContext } from "../core/context";
 import { Button } from "react-bootstrap";
+
+import { StateContext } from "../core/context";
 
 export function ClearOutputsButton(props) {
   const [, dispatch] = React.useContext(StateContext);
 
   return (
     <Button variant="outline-danger" onClick={() => dispatch(["clearOutputs"])}>
-      Clear
+      Clear Outputs
     </Button>
   );
 }
@@ -36,7 +37,7 @@ export function PasteOutputsButton(props) {
         }
       }}
     >
-      Paste
+      Paste Outputs
     </Button>
   );
 }
@@ -51,7 +52,7 @@ export function CopyOutputsButton(props) {
         prompt("Please copy the Outputs string below:", outputsString);
       }}
     >
-      Copy
+      Copy Outputs
     </Button>
   );
 }
