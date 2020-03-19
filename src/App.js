@@ -49,11 +49,13 @@ function Container(props) {
       const fontList = await loadFontList(host, dispatch);
       const fontName = fontList[0]; // override our context
       await loadFont(
-        host,
-        modelName,
-        modelSuffix,
-        fontName,
-        inferenceType,
+        {
+          host,
+          modelName,
+          modelSuffix,
+          fontName,
+          inferenceType
+        },
         dispatch
       );
     };

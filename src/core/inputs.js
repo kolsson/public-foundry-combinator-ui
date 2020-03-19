@@ -15,6 +15,7 @@ function transformInputs(modelName, modelSuffix, fontName, data) {
       glyph,
       uni: glyph.charCodeAt(0),
       svg,
+      bitmap: "",
       source: "font",
       sourceGid: -1,
       sourceFontName: fontName,
@@ -36,10 +37,7 @@ function transformInputs(modelName, modelSuffix, fontName, data) {
 }
 
 export async function loadInputs(
-  host,
-  modelName,
-  modelSuffix,
-  fontName,
+  { host, modelName, modelSuffix, fontName },
   dispatch
 ) {
   dispatch(["loadFont", { fontName }]);

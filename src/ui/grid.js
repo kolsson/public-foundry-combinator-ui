@@ -109,13 +109,15 @@ export function GridFontInference(props) {
 
         const fetchData = async () => {
           await loadFontInferences(
-            host,
-            modelName,
-            modelSuffix,
-            inferenceType,
-            currInferenceGlyphRecord,
-            inferenceGlyphRecord,
-            dispatch
+            {
+              host,
+              modelName,
+              modelSuffix,
+              inferenceType,
+              inferenceGlyphRecord
+            },
+            dispatch,
+            currInferenceGlyphRecord
           );
         };
 
@@ -127,7 +129,7 @@ export function GridFontInference(props) {
 
 export function GridSvgInference(props) {
   const [
-    { host, modelName, modelSuffix, inferenceGlyphRecord },
+    { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
     dispatch
   ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
@@ -139,12 +141,15 @@ export function GridSvgInference(props) {
 
         const fetchData = async () => {
           await loadSvgInferences(
-            host,
-            modelName,
-            modelSuffix,
-            currInferenceGlyphRecord,
-            inferenceGlyphRecord,
-            dispatch
+            {
+              host,
+              modelName,
+              modelSuffix,
+              inferenceType,
+              inferenceGlyphRecord
+            },
+            dispatch,
+            currInferenceGlyphRecord
           );
         };
 
@@ -216,7 +221,7 @@ export function Grid(props) {
     <div>
       <GridLayout>
         {props.data.map(x => (
-          <GridItem key={x.glyph}>
+          <GridItem key={x.gid}>
             <GridContent
               selected={checkSelected(props.title, inferenceGlyphRecord, x)}
             >

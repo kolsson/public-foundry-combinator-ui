@@ -17,8 +17,8 @@ function transformInferences(
       index: index++,
       glyph,
       uni: glyph.charCodeAt(0),
-      svg: inferenceType === 'svg' ? data[glyph] : '',
-      bitmap: inferenceType === 'bitmap' ? data[glyph] : '',
+      svg: inferenceType === "svg" ? data[glyph] : "",
+      bitmap: inferenceType === "bitmap" ? data[glyph] : "",
       source,
       sourceGid: inferenceGlyphRecord.gid,
       sourceFontName: inferenceGlyphRecord.sourceFontName,
@@ -31,17 +31,12 @@ function transformInferences(
 }
 
 export async function loadFontInferences(
-  host,
-  modelName,
-  modelSuffix,
-  inferenceType,
-  currInferenceGlyphRecord,
-  inferenceGlyphRecord,
-  dispatch
+  { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
+  dispatch,
+  currInferenceGlyphRecord
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
-
   const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
 
   try {
@@ -69,17 +64,18 @@ export async function loadFontInferences(
 }
 
 export async function loadSvgInferences(
-  host,
-  modelName,
-  modelSuffix,
-  inferenceType,
-  currInferenceGlyphRecord,
-  inferenceGlyphRecord,
-  dispatch
+  {
+    host,
+    modelName,
+    modelSuffix,
+    inferenceType,
+    inferenceGlyphRecord
+  },
+  dispatch,
+  currInferenceGlyphRecord
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
-
   const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
 
   try {

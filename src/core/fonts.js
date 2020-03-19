@@ -15,18 +15,11 @@ export async function loadFontList(host, dispatch) {
 }
 
 export async function loadFont(
-  host,
-  modelName,
-  modelSuffix,
-  fontName,
-  inferenceType,
+  { host, modelName, modelSuffix, fontName, inferenceType },
   dispatch
 ) {
   const inferenceGlyphRecord = await loadInputs(
-    host,
-    modelName,
-    modelSuffix,
-    fontName,
+    { host, modelName, modelSuffix, fontName },
     dispatch
   );
 
@@ -34,12 +27,8 @@ export async function loadFont(
   // so we don't pass a currInferenceGlyphRecord
 
   await loadFontInferences(
-    host,
-    modelName,
-    modelSuffix,
-    inferenceType,
-    inferenceGlyphRecord,
-    inferenceGlyphRecord,
-    dispatch
+    { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
+    dispatch,
+    inferenceGlyphRecord
   );
 }

@@ -36,23 +36,27 @@ export function ModelsDropdown(props) {
 
             if (inferenceGlyphRecord.source === "font") {
               await loadFontInferences(
-                host,
-                modelName,
-                modelSuffix,
-                inferenceType,
-                inferenceGlyphRecord,
-                inferenceGlyphRecord,
-                dispatch
+                {
+                  host,
+                  modelName,
+                  modelSuffix,
+                  inferenceType,
+                  inferenceGlyphRecord
+                },
+                dispatch,
+                inferenceGlyphRecord
               );
             } else {
               await loadSvgInferences(
-                host,
-                modelName,
-                modelSuffix,
-                inferenceType,
-                inferenceGlyphRecord,
-                inferenceGlyphRecord,
-                dispatch
+                {
+                  host,
+                  modelName,
+                  modelSuffix,
+                  inferenceType,
+                  inferenceGlyphRecord
+                },
+                dispatch,
+                inferenceGlyphRecord
               );
             }
           };
@@ -85,11 +89,13 @@ export function FontsDropdown(props) {
           const fetchData = async () => {
             const fontName = fontList[ek]; // override our context
             await loadFont(
-              host,
-              modelName,
-              modelSuffix,
-              fontName,
-              inferenceType,
+              {
+                host,
+                modelName,
+                modelSuffix,
+                fontName,
+                inferenceType
+              },
               dispatch
             );
           };
