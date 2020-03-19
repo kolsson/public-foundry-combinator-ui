@@ -64,48 +64,46 @@ export async function loadFontInferences(
 }
 
 export async function loadSvgInferences(
-  {
-    host,
-    modelName,
-    modelSuffix,
-    inferenceType,
-    inferenceGlyphRecord
-  },
+  { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
   dispatch,
   currInferenceGlyphRecord
 ) {
-  dispatch(["loadInference", { inferenceGlyphRecord }]);
-  const ms = modelSuffix || "-";
-  const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
+  if (inferenceType === "bitmap") {
+    alert("Cannot infer a bitmap from a bitmap inference!");
+  } else {
+    dispatch(["loadInference", { inferenceGlyphRecord }]);
+    const ms = modelSuffix || "-";
+    const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
 
-  try {
-    // must use POST
-    const result = await fetch(api, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        svg: inferenceGlyphRecord.svg
-      })
-    });
+    try {
+      // must use POST
+      const result = await fetch(api, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          svg: inferenceGlyphRecord.svg
+        })
+      });
 
-    const data = await result.json();
-    if (data.error) throw data.error;
+      const data = await result.json();
+      if (data.error) throw data.error;
 
-    const inferences = transformInferences(
-      modelName,
-      modelSuffix,
-      inferenceType,
-      inferenceGlyphRecord,
-      "inference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
-      data.inferences
-    );
+      const inferences = transformInferences(
+        modelName,
+        modelSuffix,
+        inferenceType,
+        inferenceGlyphRecord,
+        "inference", // font -> fontInference -> svgInference (so 2+ steps away from the font)
+        data.inferences
+      );
 
-    dispatch(["loadedInferences", { inferences }]);
-  } catch (error) {
-    dispatch([
-      "loadedInferencesFailed",
-      { inferenceGlyphRecord: currInferenceGlyphRecord }
-    ]);
-    alert(error);
+      dispatch(["loadedInferences", { inferences }]);
+    } catch (error) {
+      dispatch([
+        "loadedInferencesFailed",
+        { inferenceGlyphRecord: currInferenceGlyphRecord }
+      ]);
+      alert(error);
+    }
   }
 }

@@ -2,9 +2,13 @@ import React from "react";
 import { ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 
 import { StateContext } from "../core/context";
+import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 
 export function InferenceToggleButtonGroup(props) {
-  const [{ inferenceType }, dispatch] = React.useContext(StateContext);
+  const [
+    { host, modelName, modelSuffix, inferenceGlyphRecord, inferenceType },
+    dispatch
+  ] = React.useContext(StateContext);
 
   return (
     <ToggleButtonGroup
@@ -12,7 +16,38 @@ export function InferenceToggleButtonGroup(props) {
       name="type"
       defaultValue={inferenceType}
       onChange={val => {
-        dispatch(["setInferenceType", { inferenceType: val }]);
+        const fetchData = async () => {
+          const inferenceType = val;
+
+          dispatch(["setInferenceType", { inferenceType }]);
+
+          if (inferenceGlyphRecord.source === "font") {
+            await loadFontInferences(
+              {
+                host,
+                modelName,
+                modelSuffix,
+                inferenceType,
+                inferenceGlyphRecord
+              },
+              dispatch,
+              inferenceGlyphRecord
+            );
+          } else {
+            await loadSvgInferences(
+              {
+                host,
+                modelName,
+                modelSuffix,
+                inferenceType,
+                inferenceGlyphRecord
+              },
+              dispatch,
+              inferenceGlyphRecord
+            );
+          }
+        };
+        fetchData();
       }}
     >
       <ToggleButton

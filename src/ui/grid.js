@@ -43,18 +43,24 @@ export const GridItem = styled.div`
 export const GridContent = styled.div`
   position: relative;
 
-  background-color: ${props => (props.selected ? "lightblue" : "white")};
+  background-color: white;
+
   width: 100%;
   height: 50px;
-
-  &:hover {
-    background-color: pink;
-  }
 `;
 
 export const GridSvg = styled.div`
   width: 100%;
-  height: 100%;
+  height: 50px;
+
+  overflow: hidden;
+`;
+
+export const GridBitmap = styled.div`
+  & img {
+    width: 100%;
+    height: 50px;
+  }
 `;
 
 export const GridInference = styled.div`
@@ -62,12 +68,20 @@ export const GridInference = styled.div`
 
   top: 0;
 
+  // lightblue = #ADD8E6 (173, 223, 255)
+  background-color: ${props =>
+    props.selected ? "rgba(91, 191, 255, 0.5)" : "transparent"};
   width: 100%;
   height: 100%;
 
-  z-index: 1000;
+  z-index: 10;
 
   cursor: pointer;
+
+  &:hover {
+    // pink = #FAAFBE (250, 175, 190)
+    background-color: rgba(245, 95, 125, 0.5);
+  }
 `;
 
 export const GridGlyph = styled.div``;
@@ -104,6 +118,7 @@ export function GridFontInference(props) {
 
   return (
     <GridInference
+      selected={props.selected}
       onClick={() => {
         const inferenceGlyphRecord = props.glyphRecord;
 
@@ -136,6 +151,7 @@ export function GridSvgInference(props) {
 
   return (
     <GridInference
+      selected={props.selected}
       onClick={() => {
         const inferenceGlyphRecord = props.glyphRecord;
 
@@ -180,7 +196,7 @@ export function GridInferencesActions(props) {
 }
 
 export function GridOutputsActions(props) {
-  if (!props.glyphRecord.svg) {
+  if (!props.glyphRecord.svg && !props.glyphRecord.bitmap) {
     return (
       <GridActions>
         <GridAction>&nbsp;</GridAction>
@@ -215,28 +231,48 @@ function checkSelected(title, inferenceGlyphRecord, glyphRecord) {
 }
 
 export function Grid(props) {
-  const [{ inferenceGlyphRecord }] = React.useContext(StateContext);
+  const [{ inferenceType, inferenceGlyphRecord }] = React.useContext(
+    StateContext
+  );
 
   return (
     <div>
       <GridLayout>
         {props.data.map(x => (
           <GridItem key={x.gid}>
-            <GridContent
-              selected={checkSelected(props.title, inferenceGlyphRecord, x)}
-            >
-              <GridSvg dangerouslySetInnerHTML={{ __html: x.svg }} />
+            <GridContent>
+              {(inferenceType === "svg" || props.title === "Inputs") &&
+                x.svg && (
+                  <GridSvg dangerouslySetInnerHTML={{ __html: x.svg }} />
+                )}
+              {inferenceType === "bitmap" &&
+                props.title !== "Inputs" &&
+                x.bitmap && (
+                  <GridBitmap dangerouslySetInnerHTML={{ __html: x.bitmap }} />
+                )}
               {props.title === "Inputs" && (
-                <GridFontInference glyphRecord={x} />
+                <GridFontInference
+                  glyphRecord={x}
+                  selected={checkSelected(props.title, inferenceGlyphRecord, x)}
+                />
               )}
               {props.title === "Inferences" && (
-                <GridSvgInference glyphRecord={x} />
+                <GridSvgInference
+                  glyphRecord={x}
+                  selected={checkSelected(props.title, inferenceGlyphRecord, x)}
+                />
               )}
               {props.title === "Outputs" && x.source === "font" && (
-                <GridFontInference glyphRecord={x} />
+                <GridFontInference
+                  glyphRecord={x}
+                  selected={checkSelected(props.title, inferenceGlyphRecord, x)}
+                />
               )}
               {props.title === "Outputs" && x.source === "inference" && (
-                <GridSvgInference glyphRecord={x} />
+                <GridSvgInference
+                  glyphRecord={x}
+                  selected={checkSelected(props.title, inferenceGlyphRecord, x)}
+                />
               )}
             </GridContent>
             <GridGlyph>{x.glyph}</GridGlyph>

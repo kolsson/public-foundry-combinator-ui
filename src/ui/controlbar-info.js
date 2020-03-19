@@ -6,6 +6,8 @@ import { StateContext } from "../core/context";
 import { ControlBarGroup, ControlBarSpacer } from "./controlbar";
 
 const InfoBox = styled.div`
+  position: relative;
+
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -21,6 +23,8 @@ const InfoBox = styled.div`
 `;
 
 const InfoGlyphBox = styled.div`
+  position: relative;
+  
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -37,12 +41,30 @@ const InfoGlyphBox = styled.div`
 `;
 
 const InfoSvgBox = styled.div`
+  position: relative;
+  
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 
-  background-color: lightblue;
+  width: 40px;
+  height: 40px;
+
+  padding: 5px;
+
+  border: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+`;
+
+const InfoSvgBoxOverlay = styled.div`
+  position: relative;
+
+  left: -40px;
+
+  // lightblue = #ADD8E6 (173, 223, 255)
+  background-color: rgba(91, 191, 255, 0.5);
   width: 40px;
   height: 40px;
 
@@ -52,6 +74,8 @@ const InfoSvgBox = styled.div`
   border-left: 0;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
+
+  z-index: 10;
 `;
 
 export function InfoInferenceGlyphRecordGroup() {
@@ -75,6 +99,7 @@ export function InfoInferenceGlyphRecordGroup() {
         <>
           <InfoGlyphBox>{inferenceGlyphRecord.glyph}</InfoGlyphBox>
           <InfoSvgBox dangerouslySetInnerHTML={{ __html }} />
+          <InfoSvgBoxOverlay />
         </>
       )}
     </>

@@ -7,7 +7,7 @@ import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 
 export function ModelsDropdown(props) {
   const [
-    { host, modelList, modelName, modelSuffix, inferenceGlyphRecord },
+    { host, modelList, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
     dispatch
   ] = React.useContext(StateContext);
 
@@ -17,7 +17,7 @@ export function ModelsDropdown(props) {
       id="dropdown-basic-button"
       title="Model"
       onSelect={ek => {
-        const [newModelName, newModelSuffix, inferenceType] = modelList[
+        const [newModelName, newModelSuffix] = modelList[
           ek
         ].split("_");
 

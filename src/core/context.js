@@ -22,6 +22,7 @@ function generateEmptyGlyphRecordSet() {
       glyph,
       uni: glyph.charCodeAt(0),
       svg: "",
+      bitmap: "",
       source: "",
       sourceGid: -1,
       sourceFontName: "",

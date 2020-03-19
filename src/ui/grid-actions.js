@@ -50,6 +50,7 @@ export function GridInfoAction(props) {
 glyph: ${x.glyph} (${x.uni})
 model: ${modelNameAndSuffix}
 svg: ${!!x.svg}
+bitmap: ${!!x.bitmap}
 
 source: ${x.source}
 sourceGid: ${x.sourceGid}
