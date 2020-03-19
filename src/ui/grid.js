@@ -68,7 +68,7 @@ export const GridInference = styled.div`
 
   top: 0;
 
-  // lightblue = #ADD8E6 (173, 223, 255)
+  ${'' /* lightblue = #ADD8E6 (173, 223, 255) */}
   background-color: ${props =>
     props.selected ? "rgba(91, 191, 255, 0.5)" : "transparent"};
   width: 100%;
@@ -79,7 +79,7 @@ export const GridInference = styled.div`
   cursor: pointer;
 
   &:hover {
-    // pink = #FAAFBE (250, 175, 190)
+    ${'' /* pink = #FAAFBE (250, 175, 190) */}
     background-color: rgba(245, 95, 125, 0.5);
   }
 `;
@@ -199,7 +199,7 @@ export function GridOutputsActions(props) {
   if (!props.glyphRecord.svg && !props.glyphRecord.bitmap) {
     return (
       <GridActions>
-        <GridAction>&nbsp;</GridAction>
+        <GridActionSpacer />
       </GridActions>
     );
   }
