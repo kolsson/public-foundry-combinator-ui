@@ -52,14 +52,14 @@ const hostList = [
 const defaultHost = localStorage.getItem("host") || hostList[0].url;
 
 const modelList = [
-  "models-v1",
-  "models-v1b",
-  "models-pf1",
-  "models-google_external",
-  "models-google_internal"
+  "v1",
+  "v1b",
+  "pf1",
+  "google_external",
+  "google_internal"
 ];
 
-const defaultModelName = "models-google"
+const defaultModelName = "google"
 const defaultModelSuffix = "external"
 
 export const initialState = {

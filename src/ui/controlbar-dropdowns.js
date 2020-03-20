@@ -18,11 +18,15 @@ export function ModelsDropdown(props) {
     dispatch
   ] = React.useContext(StateContext);
 
+  let modelNameAndSuffix = modelName;
+  if (!!modelSuffix)
+    modelNameAndSuffix = `${modelNameAndSuffix}_${modelSuffix}`;
+
   return (
     <DropdownButton
       variant="outline-primary"
       id="dropdown-basic-button"
-      title="Model"
+      title={`Model: ${modelNameAndSuffix}`}
       onSelect={ek => {
         const [newModelName, newModelSuffix] = modelList[ek].split("_");
 

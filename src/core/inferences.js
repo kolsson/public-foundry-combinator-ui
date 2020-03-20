@@ -37,7 +37,7 @@ export async function loadFontInferences(
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
-  const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
+  const api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
 
   try {
     const result = await fetch(api);
@@ -73,7 +73,7 @@ export async function loadSvgInferences(
   } else {
     dispatch(["loadInference", { inferenceGlyphRecord }]);
     const ms = modelSuffix || "-";
-    const api = `${host}/infer/${inferenceType}/${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
+    const api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
 
     try {
       // must use POST

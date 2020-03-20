@@ -89,12 +89,12 @@ export function InfoInferenceGlyphRecordGroup() {
 
   return (
     <>
-      {!!inferenceGlyphRecord.sourceFontName && (
+      {/* {!!inferenceGlyphRecord.sourceFontName && (
         <>
           <InfoBox>{inferenceGlyphRecord.sourceFontName}</InfoBox>
           <ControlBarSpacer />
         </>
-      )}
+      )} */}
       {!!inferenceGlyphRecord.glyph && (
         <>
           <InfoGlyphBox>{inferenceGlyphRecord.glyph}</InfoGlyphBox>

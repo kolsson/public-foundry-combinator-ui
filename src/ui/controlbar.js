@@ -1,8 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
-import { InfoGroup } from "./controlbar-info";
-import { ModelsDropdown, FontsDropdown, HostsDropdown } from "./controlbar-dropdowns";
+import { InfoInferenceGlyphRecordGroup } from "./controlbar-info";
+import {
+  ModelsDropdown,
+  FontsDropdown,
+  HostsDropdown
+} from "./controlbar-dropdowns";
 import {
   ClearOutputsButton,
   PasteOutputsButton,
@@ -38,11 +42,14 @@ export const ControlBarSpacer = styled.div`
 export function PrimaryControlBar(props) {
   return (
     <ControlBarLayout>
-      <InfoGroup />
       <ControlBarGroup>
+        <HostsDropdown />
+        <ControlBarSpacer />
         <ModelsDropdown />
         <ControlBarSpacer />
         <FontsDropdown />
+        <ControlBarSpacer />
+        <InfoInferenceGlyphRecordGroup />
       </ControlBarGroup>
       <ControlBarGroup>
         <ClearOutputsButton />
@@ -61,9 +68,7 @@ export function SecondaryControlBar(props) {
       <ControlBarGroup>
         <InferenceTypeToggleButtonGroup />
       </ControlBarGroup>
-      <ControlBarGroup>
-        <HostsDropdown />
-      </ControlBarGroup>
+      <ControlBarGroup></ControlBarGroup>
     </ControlBarLayout>
   );
 }
