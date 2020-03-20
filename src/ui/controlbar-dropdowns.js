@@ -129,14 +129,14 @@ export function HostsDropdown(props) {
       alignRight
       variant="outline-primary"
       id="dropdown-basic-button"
-      title={`Host: ${(hostList.find(h => h.url === host)).name}`}
+      title={`Host: ${hostList.find(h => h.url === host).name}`}
       onSelect={ek => {
         const newHost = hostList[ek].url;
 
         if (host !== newHost) {
           const fetchData = async () => {
             // for now we don't update anything except our host
-            dispatch(["setHost", { host: newHost }])
+            dispatch(["setHost", { host: newHost }]);
             localStorage.setItem("host", newHost);
           };
 
@@ -149,6 +149,74 @@ export function HostsDropdown(props) {
           {option.name}
         </Dropdown.Item>
       ))}
+    </DropdownButton>
+  );
+}
+
+export function BitmapDepthDropdown(props) {
+  const [
+    {
+      host,
+      modelName,
+      modelSuffix,
+      inferenceType,
+      bitmapType,
+      inferenceGlyphRecord
+    },
+    dispatch
+  ] = React.useContext(StateContext);
+
+  if (inferenceType !== "bitmap") return <></>;
+
+  return (
+    <DropdownButton
+      alignRight
+      variant="outline-primary"
+      id="dropdown-basic-button"
+      title={`Bitmap Depth: ${bitmapType}-bit`}
+      onSelect={ek => {
+        const fetchData = async () => {
+          const bitmapType = ek;
+
+          dispatch(["setBitmapType", { bitmapType }]);
+
+          if (inferenceGlyphRecord.source === "font") {
+            await loadFontInferences(
+              {
+                host,
+                modelName,
+                modelSuffix,
+                inferenceType,
+                bitmapType,
+                inferenceGlyphRecord
+              },
+              dispatch,
+              inferenceGlyphRecord
+            );
+          } else {
+            await loadSvgInferences(
+              {
+                host,
+                modelName,
+                modelSuffix,
+                inferenceType,
+                bitmapType,
+                inferenceGlyphRecord
+              },
+              dispatch,
+              inferenceGlyphRecord
+            );
+          }
+        };
+        fetchData();
+      }}
+    >
+      <Dropdown.Item key={8} eventKey={8}>
+        8-bit
+      </Dropdown.Item>
+      <Dropdown.Item key={1} eventKey={1}>
+        1-bit
+      </Dropdown.Item>
     </DropdownButton>
   );
 }

@@ -51,16 +51,10 @@ const hostList = [
 
 const defaultHost = localStorage.getItem("host") || hostList[0].url;
 
-const modelList = [
-  "v1",
-  "v1b",
-  "pf1",
-  "google_external",
-  "google_internal"
-];
+const modelList = ["v1", "v1b", "pf1", "google_external", "google_internal"];
 
-const defaultModelName = "google"
-const defaultModelSuffix = "external"
+const defaultModelName = "google";
+const defaultModelSuffix = "external";
 
 export const initialState = {
   hostList,
@@ -73,6 +67,7 @@ export const initialState = {
   modelSuffix: defaultModelSuffix,
   fontName: "",
   inferenceType: "svg",
+  bitmapType: "8",
   inferenceGlyphRecord: null,
 
   inputs: [...emptyGlyphRecordSet],
@@ -132,6 +127,12 @@ export const reducer = (state, [type, payload]) => {
       return {
         ...state,
         inferenceType: payload.inferenceType
+      };
+
+    case "setBitmapType":
+      return {
+        ...state,
+        bitmapType: payload.bitmapType
       };
 
     //-----------------------------------------------------------------------------
@@ -198,6 +199,7 @@ export const reducer = (state, [type, payload]) => {
         glyph: output.glyph,
         uni: output.glyph.charCodeAt(0),
         svg: "",
+        bitmap: "",
         source: "",
         sourceGid: -1,
         sourceFontName: "",

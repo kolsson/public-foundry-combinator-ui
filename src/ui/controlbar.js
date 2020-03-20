@@ -5,7 +5,8 @@ import { InfoInferenceGlyphRecordGroup } from "./controlbar-info";
 import {
   ModelsDropdown,
   FontsDropdown,
-  HostsDropdown
+  HostsDropdown,
+  BitmapDepthDropdown
 } from "./controlbar-dropdowns";
 import {
   ClearOutputsButton,
@@ -39,6 +40,14 @@ export const ControlBarSpacer = styled.div`
   padding-right: 10px;
 `;
 
+export const ControlBarLabel = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: rgb(0, 123, 255);
+`;
+
 export function PrimaryControlBar(props) {
   return (
     <ControlBarLayout>
@@ -67,6 +76,8 @@ export function SecondaryControlBar(props) {
     <ControlBarLayout isBottom>
       <ControlBarGroup>
         <InferenceTypeToggleButtonGroup />
+        <ControlBarSpacer />
+        <BitmapDepthDropdown />
       </ControlBarGroup>
       <ControlBarGroup></ControlBarGroup>
     </ControlBarLayout>
