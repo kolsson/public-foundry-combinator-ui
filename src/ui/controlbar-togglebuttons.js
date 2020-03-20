@@ -4,7 +4,7 @@ import { ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import { StateContext } from "../core/context";
 import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 
-export function InferenceToggleButtonGroup(props) {
+export function InferenceTypeToggleButtonGroup(props) {
   const [
     { host, modelName, modelSuffix, inferenceGlyphRecord, inferenceType },
     dispatch

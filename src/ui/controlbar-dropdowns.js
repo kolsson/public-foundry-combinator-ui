@@ -7,7 +7,14 @@ import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 
 export function ModelsDropdown(props) {
   const [
-    { host, modelList, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
+    {
+      host,
+      modelList,
+      modelName,
+      modelSuffix,
+      inferenceType,
+      inferenceGlyphRecord
+    },
     dispatch
   ] = React.useContext(StateContext);
 
@@ -17,9 +24,7 @@ export function ModelsDropdown(props) {
       id="dropdown-basic-button"
       title="Model"
       onSelect={ek => {
-        const [newModelName, newModelSuffix] = modelList[
-          ek
-        ].split("_");
+        const [newModelName, newModelSuffix] = modelList[ek].split("_");
 
         if (newModelName !== modelName || newModelSuffix !== modelSuffix) {
           const fetchData = async () => {
@@ -106,6 +111,38 @@ export function FontsDropdown(props) {
       {fontList.map((option, i) => (
         <Dropdown.Item key={i} eventKey={i}>
           {option}
+        </Dropdown.Item>
+      ))}
+    </DropdownButton>
+  );
+}
+
+export function HostsDropdown(props) {
+  const [{ hostList, host }, dispatch] = React.useContext(StateContext);
+
+  return (
+    <DropdownButton
+      alignRight
+      variant="outline-primary"
+      id="dropdown-basic-button"
+      title={`Host: ${(hostList.find(h => h.url === host)).name}`}
+      onSelect={ek => {
+        const newHost = hostList[ek].url;
+
+        if (host !== newHost) {
+          const fetchData = async () => {
+            // for now we don't update anything except our host
+            dispatch(["setHost", { host: newHost }])
+            localStorage.setItem("host", newHost);
+          };
+
+          fetchData();
+        }
+      }}
+    >
+      {hostList.map((option, i) => (
+        <Dropdown.Item key={i} eventKey={i}>
+          {option.name}
         </Dropdown.Item>
       ))}
     </DropdownButton>

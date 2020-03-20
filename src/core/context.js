@@ -34,22 +34,43 @@ function generateEmptyGlyphRecordSet() {
   return out;
 }
 
-export const initialState = {
-  host: "http://67.201.10.48:5959/api", // lyra WAN
-  // host: "http://10.0.1.210:5959/api", // lyra LAN
-  // host: "http://127.0.0.1:5959/api", // local
+const hostList = [
+  {
+    name: "lyra (WAN)",
+    url: "http://67.201.10.48:5959/api"
+  },
+  {
+    name: "lyra (LAN)",
+    url: "http://10.0.1.210:5959/api"
+  },
+  {
+    name: "localhost",
+    url: "http://127.0.0.1:5959/api"
+  }
+];
 
-  modelList: [
-    "models-v1",
-    "models-v1b",
-    "models-pf1",
-    "models-google_external",
-    "models-google_internal"
-  ],
+const defaultHost = localStorage.getItem("host") || hostList[0].url;
+
+const modelList = [
+  "models-v1",
+  "models-v1b",
+  "models-pf1",
+  "models-google_external",
+  "models-google_internal"
+];
+
+const defaultModelName = "models-google"
+const defaultModelSuffix = "external"
+
+export const initialState = {
+  hostList,
+  host: defaultHost,
+
+  modelList,
   fontList: [],
 
-  modelName: "models-v1b",
-  modelSuffix: "",
+  modelName: defaultModelName,
+  modelSuffix: defaultModelSuffix,
   fontName: "",
   inferenceType: "svg",
   inferenceGlyphRecord: null,
@@ -65,6 +86,16 @@ export const reducer = (state, [type, payload]) => {
   console.log("Reducer action:", type, payload);
 
   switch (type) {
+    //-----------------------------------------------------------------------------
+    // host
+    //-----------------------------------------------------------------------------
+
+    case "setHost":
+      return {
+        ...state,
+        host: payload.host
+      };
+
     //-----------------------------------------------------------------------------
     // fontlist / model / inferencetype
     //-----------------------------------------------------------------------------

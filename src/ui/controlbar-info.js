@@ -63,7 +63,7 @@ const InfoSvgBoxOverlay = styled.div`
 
   left: -40px;
 
-  // lightblue = #ADD8E6 (173, 223, 255)
+  ${'' /* lightblue = #ADD8E6 (173, 223, 255) */}
   background-color: rgba(91, 191, 255, 0.5);
   width: 40px;
   height: 40px;

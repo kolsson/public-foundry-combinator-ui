@@ -2,15 +2,13 @@ import React from "react";
 import styled from "styled-components";
 
 import { InfoGroup } from "./controlbar-info";
-import { ModelsDropdown, FontsDropdown } from "./controlbar-dropdowns";
+import { ModelsDropdown, FontsDropdown, HostsDropdown } from "./controlbar-dropdowns";
 import {
   ClearOutputsButton,
   PasteOutputsButton,
   CopyOutputsButton
 } from "./controlbar-buttons";
-import {
-  InferenceToggleButtonGroup
-} from "./controlbar-togglebuttons"
+import { InferenceTypeToggleButtonGroup } from "./controlbar-togglebuttons";
 
 export const ControlBarLayout = styled.div`
   display: flex;
@@ -39,7 +37,7 @@ export const ControlBarSpacer = styled.div`
 
 export function PrimaryControlBar(props) {
   return (
-    <ControlBarLayout >
+    <ControlBarLayout>
       <InfoGroup />
       <ControlBarGroup>
         <ModelsDropdown />
@@ -61,9 +59,11 @@ export function SecondaryControlBar(props) {
   return (
     <ControlBarLayout isBottom>
       <ControlBarGroup>
-        <InferenceToggleButtonGroup />
-        </ControlBarGroup>
-      <ControlBarGroup />
+        <InferenceTypeToggleButtonGroup />
+      </ControlBarGroup>
+      <ControlBarGroup>
+        <HostsDropdown />
+      </ControlBarGroup>
     </ControlBarLayout>
   );
 }
