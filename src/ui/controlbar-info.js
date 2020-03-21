@@ -18,7 +18,7 @@ const InfoBox = styled.div`
 
   color: white;
 
-  background-color: gray;
+  background-color: rgb(0, 123, 255);
   border-radius: 5px;
 `;
 
@@ -35,7 +35,7 @@ const InfoGlyphBox = styled.div`
 
   color: white;
 
-  background-color: gray;
+  background-color: rgb(0, 123, 255);
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 `;
@@ -70,7 +70,7 @@ const InfoSvgBoxOverlay = styled.div`
 
   padding: 5px;
 
-  border: 2px solid gray;
+  border: 2px solid rgb(0, 123, 255);
   border-left: 0;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
