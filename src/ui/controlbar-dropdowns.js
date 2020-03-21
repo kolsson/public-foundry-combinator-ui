@@ -13,6 +13,7 @@ export function ModelsDropdown(props) {
       modelName,
       modelSuffix,
       inferenceType,
+      bitmapDepth,
       inferenceGlyphRecord
     },
     dispatch
@@ -50,6 +51,7 @@ export function ModelsDropdown(props) {
                   modelName,
                   modelSuffix,
                   inferenceType,
+                  bitmapDepth,
                   inferenceGlyphRecord
                 },
                 dispatch,
@@ -62,6 +64,7 @@ export function ModelsDropdown(props) {
                   modelName,
                   modelSuffix,
                   inferenceType,
+                  bitmapDepth,
                   inferenceGlyphRecord
                 },
                 dispatch,
@@ -84,7 +87,15 @@ export function ModelsDropdown(props) {
 
 export function FontsDropdown(props) {
   const [
-    { host, fontList, modelName, modelSuffix, fontName, inferenceType },
+    {
+      host,
+      fontList,
+      modelName,
+      modelSuffix,
+      fontName,
+      inferenceType,
+      bitmapDepth
+    },
     dispatch
   ] = React.useContext(StateContext);
 
@@ -103,7 +114,8 @@ export function FontsDropdown(props) {
                 modelName,
                 modelSuffix,
                 fontName,
-                inferenceType
+                inferenceType,
+                bitmapDepth
               },
               dispatch
             );
@@ -160,7 +172,7 @@ export function BitmapDepthDropdown(props) {
       modelName,
       modelSuffix,
       inferenceType,
-      bitmapType,
+      bitmapDepth,
       inferenceGlyphRecord
     },
     dispatch
@@ -173,12 +185,12 @@ export function BitmapDepthDropdown(props) {
       alignRight
       variant="outline-primary"
       id="dropdown-basic-button"
-      title={`Bitmap Depth: ${bitmapType}-bit`}
+      title={`Bitmap Depth: ${bitmapDepth}-bit`}
       onSelect={ek => {
         const fetchData = async () => {
-          const bitmapType = ek;
+          const bitmapDepth = ek;
 
-          dispatch(["setBitmapType", { bitmapType }]);
+          dispatch(["setBitmapDepth", { bitmapDepth }]);
 
           if (inferenceGlyphRecord.source === "font") {
             await loadFontInferences(
@@ -187,7 +199,7 @@ export function BitmapDepthDropdown(props) {
                 modelName,
                 modelSuffix,
                 inferenceType,
-                bitmapType,
+                bitmapDepth,
                 inferenceGlyphRecord
               },
               dispatch,
@@ -200,7 +212,7 @@ export function BitmapDepthDropdown(props) {
                 modelName,
                 modelSuffix,
                 inferenceType,
-                bitmapType,
+                bitmapDepth,
                 inferenceGlyphRecord
               },
               dispatch,

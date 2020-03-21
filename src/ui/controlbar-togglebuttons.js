@@ -8,7 +8,14 @@ import { ControlBarSpacer, ControlBarLabel } from "./controlbar";
 
 export function InferenceTypeToggleButtonGroup(props) {
   const [
-    { host, modelName, modelSuffix, inferenceGlyphRecord, inferenceType },
+    {
+      host,
+      modelName,
+      modelSuffix,
+      inferenceType,
+      bitmapDepth,
+      inferenceGlyphRecord
+    },
     dispatch
   ] = React.useContext(StateContext);
 
@@ -30,6 +37,7 @@ export function InferenceTypeToggleButtonGroup(props) {
                 modelName,
                 modelSuffix,
                 inferenceType,
+                bitmapDepth,
                 inferenceGlyphRecord
               },
               dispatch,
@@ -42,6 +50,7 @@ export function InferenceTypeToggleButtonGroup(props) {
                 modelName,
                 modelSuffix,
                 inferenceType,
+                bitmapDepth,
                 inferenceGlyphRecord
               },
               dispatch,
@@ -70,18 +79,19 @@ export function InferenceTypeToggleButtonGroup(props) {
   );
 }
 
-export function BitmapTypeToggleButtonGroup(props) {
+export function BitmapDepthToggleButtonGroup(props) {
   const [
     {
       host,
       modelName,
       modelSuffix,
       inferenceType,
-      bitmapType,
+      bitmapDepth,
       inferenceGlyphRecord
     },
     dispatch
   ] = React.useContext(StateContext);
+
   if (inferenceType !== "bitmap") return <></>;
 
   return (
@@ -91,12 +101,12 @@ export function BitmapTypeToggleButtonGroup(props) {
       <ToggleButtonGroup
         type="radio"
         name="type"
-        defaultValue={bitmapType}
+        defaultValue={bitmapDepth}
         onChange={val => {
           const fetchData = async () => {
-            const bitmapType = val;
+            const bitmapDepth = val;
 
-            dispatch(["setBitmapType", { bitmapType }]);
+            dispatch(["setBitmapDepth", { bitmapDepth }]);
 
             if (inferenceGlyphRecord.source === "font") {
               await loadFontInferences(
@@ -105,7 +115,7 @@ export function BitmapTypeToggleButtonGroup(props) {
                   modelName,
                   modelSuffix,
                   inferenceType,
-                  bitmapType,
+                  bitmapDepth,
                   inferenceGlyphRecord
                 },
                 dispatch,
@@ -118,7 +128,7 @@ export function BitmapTypeToggleButtonGroup(props) {
                   modelName,
                   modelSuffix,
                   inferenceType,
-                  bitmapType,
+                  bitmapDepth,
                   inferenceGlyphRecord
                 },
                 dispatch,

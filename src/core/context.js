@@ -67,7 +67,7 @@ export const initialState = {
   modelSuffix: defaultModelSuffix,
   fontName: "",
   inferenceType: "svg",
-  bitmapType: "8",
+  bitmapDepth: "8",
   inferenceGlyphRecord: null,
 
   inputs: [...emptyGlyphRecordSet],
@@ -129,10 +129,10 @@ export const reducer = (state, [type, payload]) => {
         inferenceType: payload.inferenceType
       };
 
-    case "setBitmapType":
+    case "setBitmapDepth":
       return {
         ...state,
-        bitmapType: payload.bitmapType
+        bitmapDepth: payload.bitmapDepth
       };
 
     //-----------------------------------------------------------------------------

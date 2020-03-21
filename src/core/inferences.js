@@ -1,3 +1,4 @@
+import queryString from "query-string";
 import { generateId } from "../core/context";
 
 function transformInferences(
@@ -31,13 +32,24 @@ function transformInferences(
 }
 
 export async function loadFontInferences(
-  { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
+  {
+    host,
+    modelName,
+    modelSuffix,
+    inferenceType,
+    bitmapDepth,
+    inferenceGlyphRecord
+  },
   dispatch,
   currInferenceGlyphRecord
 ) {
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
-  const api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
+  let api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
+  const qs = queryString.stringify({ depth: bitmapDepth });
+  if (!!qs) api = `${api}?${qs}`;
+
+  console.log(api)
 
   try {
     const result = await fetch(api);
@@ -64,7 +76,14 @@ export async function loadFontInferences(
 }
 
 export async function loadSvgInferences(
-  { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
+  {
+    host,
+    modelName,
+    modelSuffix,
+    inferenceType,
+    bitmapDepth,
+    inferenceGlyphRecord
+  },
   dispatch,
   currInferenceGlyphRecord
 ) {
@@ -73,7 +92,11 @@ export async function loadSvgInferences(
   } else {
     dispatch(["loadInference", { inferenceGlyphRecord }]);
     const ms = modelSuffix || "-";
-    const api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
+    let api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
+    const qs = queryString.stringify({ depth: bitmapDepth });
+    if (!!qs) api = `${api}?${qs}`;
+
+    console.log(api)
 
     try {
       // must use POST

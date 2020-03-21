@@ -68,7 +68,7 @@ export const GridInference = styled.div`
 
   top: 0;
 
-  ${'' /* lightblue = #ADD8E6 (173, 223, 255) */}
+  ${"" /* lightblue = #ADD8E6 (173, 223, 255) */}
   background-color: ${props =>
     props.selected ? "rgba(91, 191, 255, 0.5)" : "transparent"};
   width: 100%;
@@ -79,7 +79,7 @@ export const GridInference = styled.div`
   cursor: pointer;
 
   &:hover {
-    ${'' /* pink = #FAAFBE (250, 175, 190) */}
+    ${"" /* pink = #FAAFBE (250, 175, 190) */}
     background-color: rgba(245, 95, 125, 0.5);
   }
 `;
@@ -111,7 +111,14 @@ export const GridActionSpacer = styled.div`
 
 export function GridFontInference(props) {
   const [
-    { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
+    {
+      host,
+      modelName,
+      modelSuffix,
+      inferenceType,
+      bitmapDepth,
+      inferenceGlyphRecord
+    },
     dispatch
   ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
@@ -129,6 +136,7 @@ export function GridFontInference(props) {
               modelName,
               modelSuffix,
               inferenceType,
+              bitmapDepth,
               inferenceGlyphRecord
             },
             dispatch,
@@ -144,7 +152,14 @@ export function GridFontInference(props) {
 
 export function GridSvgInference(props) {
   const [
-    { host, modelName, modelSuffix, inferenceType, inferenceGlyphRecord },
+    {
+      host,
+      modelName,
+      modelSuffix,
+      inferenceType,
+      bitmapDepth,
+      inferenceGlyphRecord
+    },
     dispatch
   ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
@@ -162,6 +177,7 @@ export function GridSvgInference(props) {
               modelName,
               modelSuffix,
               inferenceType,
+              bitmapDepth,
               inferenceGlyphRecord
             },
             dispatch,

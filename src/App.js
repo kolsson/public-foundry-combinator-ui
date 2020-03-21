@@ -34,6 +34,7 @@ function Container(props) {
       modelSuffix,
       fontName,
       inferenceType,
+      bitmapDepth,
       inputs,
       inferences,
       outputs,
@@ -54,7 +55,8 @@ function Container(props) {
           modelName,
           modelSuffix,
           fontName,
-          inferenceType
+          inferenceType,
+          bitmapDepth
         },
         dispatch
       );
