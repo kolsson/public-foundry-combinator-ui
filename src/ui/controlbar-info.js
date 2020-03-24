@@ -22,6 +22,15 @@ const InfoBox = styled.div`
   border-radius: 5px;
 `;
 
+const InfoGlyphBoxGroup = styled.div`
+  position: relative;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
 const InfoGlyphBox = styled.div`
   position: relative;
   
@@ -40,7 +49,11 @@ const InfoGlyphBox = styled.div`
   border-bottom-left-radius: 5px;
 `;
 
-const InfoSvgBox = styled.div`
+const InfoGlyphSvgWrapper = styled.div`
+  position: relative;
+`;
+
+const InfoGlyphSvg = styled.div`
   position: relative;
   
   display: flex;
@@ -58,10 +71,11 @@ const InfoSvgBox = styled.div`
   border-bottom-right-radius: 5px;
 `;
 
-const InfoSvgBoxOverlay = styled.div`
-  position: relative;
+const InfoGlyphSvgOverlay = styled.div`
+  position: absolute;
 
-  left: -40px;
+  top: 0;
+  left: 0;
 
   ${'' /* lightblue = #ADD8E6 (173, 223, 255) */}
   background-color: rgba(91, 191, 255, 0.5);
@@ -88,21 +102,17 @@ export function InfoInferenceGlyphRecordGroup() {
   if (inferenceGlyphRecord.svg) __html = inferenceGlyphRecord.svg.replace(/50px/g, "30px");
 
   return (
-    <>
-      {/* {!!inferenceGlyphRecord.sourceFontName && (
-        <>
-          <InfoBox>{inferenceGlyphRecord.sourceFontName}</InfoBox>
-          <ControlBarSpacer />
-        </>
-      )} */}
+    <InfoGlyphBoxGroup>
       {!!inferenceGlyphRecord.glyph && (
         <>
           <InfoGlyphBox>{inferenceGlyphRecord.glyph}</InfoGlyphBox>
-          <InfoSvgBox dangerouslySetInnerHTML={{ __html }} />
-          <InfoSvgBoxOverlay />
+          <InfoGlyphSvgWrapper>
+            <InfoGlyphSvg dangerouslySetInnerHTML={{ __html }} />
+            <InfoGlyphSvgOverlay />
+          </InfoGlyphSvgWrapper>
         </>
       )}
-    </>
+    </InfoGlyphBoxGroup>
   );
 }
 
