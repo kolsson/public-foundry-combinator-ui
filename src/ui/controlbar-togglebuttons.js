@@ -69,6 +69,13 @@ export function InferenceTypeToggleButtonGroup(props) {
         SVG
       </ToggleButton>
       <ToggleButton
+        value="autotrace"
+        variant="outline-primary"
+        style={{ cursor: "pointer" }}
+      >
+        Bitmap ⮕ SVG
+      </ToggleButton>
+      <ToggleButton
         value="bitmap"
         variant="outline-primary"
         style={{ cursor: "pointer" }}
@@ -76,84 +83,5 @@ export function InferenceTypeToggleButtonGroup(props) {
         Bitmap
       </ToggleButton>
     </ToggleButtonGroup>
-  );
-}
-
-export function BitmapDepthToggleButtonGroup(props) {
-  const [
-    {
-      host,
-      modelName,
-      modelSuffix,
-      inferenceType,
-      bitmapDepth,
-      inferenceGlyphRecord
-    },
-    dispatch
-  ] = React.useContext(StateContext);
-
-  if (inferenceType !== "bitmap") return <></>;
-
-  return (
-    <>
-      <ControlBarLabel>Bitmap Depth:</ControlBarLabel>
-      <ControlBarSpacer />
-      <ToggleButtonGroup
-        type="radio"
-        name="type"
-        defaultValue={bitmapDepth}
-        onChange={val => {
-          const fetchData = async () => {
-            const bitmapDepth = val;
-
-            dispatch(["setBitmapDepth", { bitmapDepth }]);
-
-            if (inferenceGlyphRecord.source === "font") {
-              await loadFontInferences(
-                {
-                  host,
-                  modelName,
-                  modelSuffix,
-                  inferenceType,
-                  bitmapDepth,
-                  inferenceGlyphRecord
-                },
-                dispatch,
-                inferenceGlyphRecord
-              );
-            } else {
-              await loadSvgInferences(
-                {
-                  host,
-                  modelName,
-                  modelSuffix,
-                  inferenceType,
-                  bitmapDepth,
-                  inferenceGlyphRecord
-                },
-                dispatch,
-                inferenceGlyphRecord
-              );
-            }
-          };
-          fetchData();
-        }}
-      >
-        <ToggleButton
-          value="8"
-          variant="outline-primary"
-          style={{ cursor: "pointer" }}
-        >
-          8-bit
-        </ToggleButton>
-        <ToggleButton
-          value="1"
-          variant="outline-primary"
-          style={{ cursor: "pointer" }}
-        >
-          1-bit
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </>
   );
 }

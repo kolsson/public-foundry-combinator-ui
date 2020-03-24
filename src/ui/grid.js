@@ -257,7 +257,7 @@ export function Grid(props) {
         {props.data.map(x => (
           <GridItem key={x.gid}>
             <GridContent>
-              {(inferenceType === "svg" || props.title === "Inputs") &&
+              {((inferenceType === "svg" || inferenceType === "autotrace") || props.title === "Inputs") &&
                 x.svg && (
                   <GridSvg dangerouslySetInnerHTML={{ __html: x.svg }} />
                 )}

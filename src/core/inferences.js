@@ -18,7 +18,10 @@ function transformInferences(
       index: index++,
       glyph,
       uni: glyph.charCodeAt(0),
-      svg: inferenceType === "svg" ? data[glyph] : "",
+      svg:
+        inferenceType === "svg" || inferenceType === "autotrace"
+          ? data[glyph]
+          : "",
       bitmap: inferenceType === "bitmap" ? data[glyph] : "",
       source,
       sourceGid: inferenceGlyphRecord.gid,
@@ -46,10 +49,12 @@ export async function loadFontInferences(
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
   let api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
-  const qs = queryString.stringify({ depth: bitmapDepth });
+  const qs =
+    inferenceType === "bitmap" &&
+    queryString.stringify({ depth: bitmapDepth, fill: "true" });
   if (!!qs) api = `${api}?${qs}`;
 
-  console.log(api)
+  console.log(api);
 
   try {
     const result = await fetch(api);
@@ -93,10 +98,15 @@ export async function loadSvgInferences(
     dispatch(["loadInference", { inferenceGlyphRecord }]);
     const ms = modelSuffix || "-";
     let api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.glyph}`;
-    const qs = queryString.stringify({ depth: bitmapDepth });
+
+    // redundant because we cannot infer a bitmap from a bitmap reference
+
+    const qs =
+      inferenceType === "bitmap" &&
+      queryString.stringify({ depth: bitmapDepth, fill: "true" });
     if (!!qs) api = `${api}?${qs}`;
 
-    console.log(api)
+    console.log(api);
 
     try {
       // must use POST

@@ -103,7 +103,7 @@ export function FontsDropdown(props) {
     <DropdownButton
       variant="outline-primary"
       id="dropdown-basic-button"
-      title="Font"
+      title={`Font: ${fontName}`}
       onSelect={ek => {
         if (fontName !== fontList[ek]) {
           const fetchData = async () => {
@@ -223,11 +223,11 @@ export function BitmapDepthDropdown(props) {
         fetchData();
       }}
     >
-      <Dropdown.Item key={8} eventKey={8}>
-        8-bit
-      </Dropdown.Item>
       <Dropdown.Item key={1} eventKey={1}>
         1-bit
+      </Dropdown.Item>
+      <Dropdown.Item key={8} eventKey={8}>
+        8-bit
       </Dropdown.Item>
     </DropdownButton>
   );

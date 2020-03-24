@@ -67,7 +67,7 @@ export const initialState = {
   modelSuffix: defaultModelSuffix,
   fontName: "",
   inferenceType: "svg",
-  bitmapDepth: "8",
+  bitmapDepth: "1",
   inferenceGlyphRecord: null,
 
   inputs: [...emptyGlyphRecordSet],
