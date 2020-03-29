@@ -41,6 +41,7 @@ export async function loadFontInferences(
     modelSuffix,
     inferenceType,
     bitmapDepth,
+    bitmapContrast,
     inferenceGlyphRecord
   },
   dispatch,
@@ -49,9 +50,19 @@ export async function loadFontInferences(
   dispatch(["loadInference", { inferenceGlyphRecord }]);
   const ms = modelSuffix || "-";
   let api = `${host}/infer/${inferenceType}/models-${modelName}/${ms}/${inferenceGlyphRecord.sourceFontName}/${inferenceGlyphRecord.glyph}`;
-  const qs =
-    inferenceType === "bitmap" &&
-    queryString.stringify({ depth: bitmapDepth, fill: "true" });
+
+  let qs;
+
+  if (inferenceType === "bitmap") {
+    qs = queryString.stringify({
+      depth: bitmapDepth,
+      contrast: bitmapContrast,
+      fill: "true"
+    });
+  } else if (inferenceType === "autotrace") {
+    qs = queryString.stringify({ contrast: bitmapContrast });
+  }
+
   if (!!qs) api = `${api}?${qs}`;
 
   console.log(api);
@@ -87,6 +98,7 @@ export async function loadSvgInferences(
     modelSuffix,
     inferenceType,
     bitmapDepth,
+    bitmapContrast,
     inferenceGlyphRecord
   },
   dispatch,
@@ -101,9 +113,18 @@ export async function loadSvgInferences(
 
     // redundant because we cannot infer a bitmap from a bitmap reference
 
-    const qs =
-      inferenceType === "bitmap" &&
-      queryString.stringify({ depth: bitmapDepth, fill: "true" });
+    let qs;
+
+    if (inferenceType === "bitmap") {
+      qs = queryString.stringify({
+        depth: bitmapDepth,
+        contrast: bitmapContrast,
+        fill: "true"
+      });
+    } else if (inferenceType === "autotrace") {
+      qs = queryString.stringify({ contrast: bitmapContrast });
+    }
+
     if (!!qs) api = `${api}?${qs}`;
 
     console.log(api);

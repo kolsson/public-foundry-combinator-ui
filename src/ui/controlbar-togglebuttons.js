@@ -14,6 +14,7 @@ export function InferenceTypeToggleButtonGroup(props) {
       modelSuffix,
       inferenceType,
       bitmapDepth,
+      bitmapContrast,
       inferenceGlyphRecord
     },
     dispatch
@@ -38,6 +39,7 @@ export function InferenceTypeToggleButtonGroup(props) {
                 modelSuffix,
                 inferenceType,
                 bitmapDepth,
+                bitmapContrast,
                 inferenceGlyphRecord
               },
               dispatch,
@@ -51,6 +53,7 @@ export function InferenceTypeToggleButtonGroup(props) {
                 modelSuffix,
                 inferenceType,
                 bitmapDepth,
+                bitmapContrast,
                 inferenceGlyphRecord
               },
               dispatch,

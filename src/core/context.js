@@ -56,6 +56,39 @@ const modelList = ["v1", "v1b", "pf1", "google_external", "google_internal"];
 const defaultModelName = "google";
 const defaultModelSuffix = "external";
 
+const bitmapContrastList = [
+  {
+    name: "None",
+    value: 1
+  },
+  {
+    name: "Auto",
+    value: "auto"
+  },
+  {
+    name: "Level 1",
+    value: 2
+  },
+  {
+    name: "Level 2",
+    value: 3
+  },
+  {
+    name: "Level 3",
+    value: 4
+  },
+  {
+    name: "Level 4",
+    value: 5
+  },
+  {
+    name: "Low",
+    value: 0.5
+  }
+];
+
+const defaultBitmapContrast = bitmapContrastList[0].value;
+
 export const initialState = {
   hostList,
   host: defaultHost,
@@ -67,7 +100,9 @@ export const initialState = {
   modelSuffix: defaultModelSuffix,
   fontName: "",
   inferenceType: "svg",
-  bitmapDepth: "1",
+  bitmapDepth: 8,
+  bitmapContrastList,
+  bitmapContrast: defaultBitmapContrast,
   inferenceGlyphRecord: null,
 
   inputs: [...emptyGlyphRecordSet],
@@ -133,6 +168,12 @@ export const reducer = (state, [type, payload]) => {
       return {
         ...state,
         bitmapDepth: payload.bitmapDepth
+      };
+
+    case "setBitmapContrast":
+      return {
+        ...state,
+        bitmapContrast: payload.bitmapContrast
       };
 
     //-----------------------------------------------------------------------------

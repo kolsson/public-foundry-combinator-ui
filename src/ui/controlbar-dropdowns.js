@@ -5,6 +5,8 @@ import { StateContext } from "../core/context";
 import { loadFont } from "../core/fonts";
 import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 
+import { ControlBarSpacer } from "./controlbar";
+
 export function ModelsDropdown(props) {
   const [
     {
@@ -14,6 +16,7 @@ export function ModelsDropdown(props) {
       modelSuffix,
       inferenceType,
       bitmapDepth,
+      bitmapContrast,
       inferenceGlyphRecord
     },
     dispatch
@@ -52,6 +55,7 @@ export function ModelsDropdown(props) {
                   modelSuffix,
                   inferenceType,
                   bitmapDepth,
+                  bitmapContrast,
                   inferenceGlyphRecord
                 },
                 dispatch,
@@ -65,6 +69,7 @@ export function ModelsDropdown(props) {
                   modelSuffix,
                   inferenceType,
                   bitmapDepth,
+                  bitmapContrast,
                   inferenceGlyphRecord
                 },
                 dispatch,
@@ -94,7 +99,8 @@ export function FontsDropdown(props) {
       modelSuffix,
       fontName,
       inferenceType,
-      bitmapDepth
+      bitmapDepth,
+      bitmapContrast
     },
     dispatch
   ] = React.useContext(StateContext);
@@ -115,7 +121,8 @@ export function FontsDropdown(props) {
                 modelSuffix,
                 fontName,
                 inferenceType,
-                bitmapDepth
+                bitmapDepth,
+                bitmapContrast
               },
               dispatch
             );
@@ -173,6 +180,7 @@ export function BitmapDepthDropdown(props) {
       modelSuffix,
       inferenceType,
       bitmapDepth,
+      bitmapContrast,
       inferenceGlyphRecord
     },
     dispatch
@@ -181,54 +189,135 @@ export function BitmapDepthDropdown(props) {
   if (inferenceType !== "bitmap") return <></>;
 
   return (
-    <DropdownButton
-      alignRight
-      variant="outline-primary"
-      id="dropdown-basic-button"
-      title={`Bitmap Depth: ${bitmapDepth}-bit`}
-      onSelect={ek => {
-        const fetchData = async () => {
-          const bitmapDepth = ek;
+    <>
+      <ControlBarSpacer />
+      <DropdownButton
+        alignRight
+        variant="outline-primary"
+        id="dropdown-basic-button"
+        title={`Bitmap Depth: ${bitmapDepth}-bit`}
+        onSelect={ek => {
+          const fetchData = async () => {
+            const bitmapDepth = ek;
 
-          dispatch(["setBitmapDepth", { bitmapDepth }]);
+            dispatch(["setBitmapDepth", { bitmapDepth }]);
 
-          if (inferenceGlyphRecord.source === "font") {
-            await loadFontInferences(
-              {
-                host,
-                modelName,
-                modelSuffix,
-                inferenceType,
-                bitmapDepth,
+            if (inferenceGlyphRecord.source === "font") {
+              await loadFontInferences(
+                {
+                  host,
+                  modelName,
+                  modelSuffix,
+                  inferenceType,
+                  bitmapDepth,
+                  bitmapContrast,
+                  inferenceGlyphRecord
+                },
+                dispatch,
                 inferenceGlyphRecord
-              },
-              dispatch,
-              inferenceGlyphRecord
-            );
-          } else {
-            await loadSvgInferences(
-              {
-                host,
-                modelName,
-                modelSuffix,
-                inferenceType,
-                bitmapDepth,
+              );
+            } else {
+              await loadSvgInferences(
+                {
+                  host,
+                  modelName,
+                  modelSuffix,
+                  inferenceType,
+                  bitmapDepth,
+                  bitmapContrast,
+                  inferenceGlyphRecord
+                },
+                dispatch,
                 inferenceGlyphRecord
-              },
-              dispatch,
-              inferenceGlyphRecord
-            );
-          }
-        };
-        fetchData();
-      }}
-    >
-      <Dropdown.Item key={1} eventKey={1}>
-        1-bit
-      </Dropdown.Item>
-      <Dropdown.Item key={8} eventKey={8}>
-        8-bit
-      </Dropdown.Item>
-    </DropdownButton>
+              );
+            }
+          };
+          fetchData();
+        }}
+      >
+        <Dropdown.Item key={8} eventKey={8}>
+          8-bit
+        </Dropdown.Item>
+        <Dropdown.Item key={1} eventKey={1}>
+          1-bit
+        </Dropdown.Item>
+      </DropdownButton>
+    </>
+  );
+}
+
+export function BitmapContrastDropdown(props) {
+  const [
+    {
+      host,
+      modelName,
+      modelSuffix,
+      inferenceType,
+      bitmapDepth,
+      bitmapContrastList,
+      bitmapContrast,
+      inferenceGlyphRecord
+    },
+    dispatch
+  ] = React.useContext(StateContext);
+
+  if (inferenceType !== "bitmap" && inferenceType !== "autotrace") return <></>;
+
+  return (
+    <>
+      <ControlBarSpacer />
+      <DropdownButton
+        alignRight
+        variant="outline-primary"
+        id="dropdown-basic-button"
+        title={`Bitmap Contrast: ${
+          bitmapContrastList.find(bc => bc.value === bitmapContrast).name
+        }`}
+        onSelect={ek => {
+          const fetchData = async () => {
+            const bitmapContrast = bitmapContrastList[ek].value;
+
+            dispatch(["setBitmapContrast", { bitmapContrast }]);
+
+            if (inferenceGlyphRecord.source === "font") {
+              await loadFontInferences(
+                {
+                  host,
+                  modelName,
+                  modelSuffix,
+                  inferenceType,
+                  bitmapDepth,
+                  bitmapContrast,
+                  inferenceGlyphRecord
+                },
+                dispatch,
+                inferenceGlyphRecord
+              );
+            } else {
+              await loadSvgInferences(
+                {
+                  host,
+                  modelName,
+                  modelSuffix,
+                  inferenceType,
+                  bitmapDepth,
+                  bitmapContrast,
+                  inferenceGlyphRecord
+                },
+                dispatch,
+                inferenceGlyphRecord
+              );
+            }
+          };
+          fetchData();
+        }}
+      >
+        {bitmapContrastList.map((option, i) => (
+          <Dropdown.Item key={i} eventKey={i}>
+            {option.name}
+          </Dropdown.Item>
+        ))}
+      </DropdownButton>
+    </>
   );
 }

@@ -15,7 +15,15 @@ export async function loadFontList(host, dispatch) {
 }
 
 export async function loadFont(
-  { host, modelName, modelSuffix, fontName, inferenceType, bitmapDepth },
+  {
+    host,
+    modelName,
+    modelSuffix,
+    fontName,
+    inferenceType,
+    bitmapDepth,
+    bitmapContrast
+  },
   dispatch
 ) {
   const inferenceGlyphRecord = await loadInputs(
@@ -33,6 +41,7 @@ export async function loadFont(
       modelSuffix,
       inferenceType,
       bitmapDepth,
+      bitmapContrast,
       inferenceGlyphRecord
     },
     dispatch,

@@ -6,7 +6,8 @@ import {
   ModelsDropdown,
   FontsDropdown,
   HostsDropdown,
-  BitmapDepthDropdown
+  BitmapDepthDropdown,
+  BitmapContrastDropdown,
 } from "./controlbar-dropdowns";
 import {
   ClearOutputsButton,
@@ -76,8 +77,8 @@ export function SecondaryControlBar(props) {
     <ControlBarLayout isBottom>
       <ControlBarGroup>
         <InferenceTypeToggleButtonGroup />
-        <ControlBarSpacer />
         <BitmapDepthDropdown />
+        <BitmapContrastDropdown />
       </ControlBarGroup>
       <ControlBarGroup></ControlBarGroup>
     </ControlBarLayout>

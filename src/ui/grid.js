@@ -117,6 +117,7 @@ export function GridFontInference(props) {
       modelSuffix,
       inferenceType,
       bitmapDepth,
+      bitmapContrast,
       inferenceGlyphRecord
     },
     dispatch
@@ -137,6 +138,7 @@ export function GridFontInference(props) {
               modelSuffix,
               inferenceType,
               bitmapDepth,
+              bitmapContrast,
               inferenceGlyphRecord
             },
             dispatch,
@@ -158,6 +160,7 @@ export function GridSvgInference(props) {
       modelSuffix,
       inferenceType,
       bitmapDepth,
+      bitmapContrast,
       inferenceGlyphRecord
     },
     dispatch
@@ -178,6 +181,7 @@ export function GridSvgInference(props) {
               modelSuffix,
               inferenceType,
               bitmapDepth,
+              bitmapContrast,
               inferenceGlyphRecord
             },
             dispatch,
