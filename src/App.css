@@ -4,10 +4,6 @@
   min-width: 1194px;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 /* fix for incorrectly sized dropdown buttons */
 .dropdown > button {
   height: 100%

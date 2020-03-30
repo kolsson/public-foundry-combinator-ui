@@ -15,8 +15,8 @@ const X = styled.span`
 `;
 
 const Info = styled.span`
-  font-size: 18px;
-  line-height: 18px;
+  font-size: 22px;
+  line-height: 20px;
 `;
 
 export function GridSetOutputAction(props) {
@@ -57,7 +57,7 @@ sourceGid: ${x.sourceGid}
 sourceFontName: ${x.sourceFontName}`);
       }}
     >
-      <Info>ⓘ</Info>
+      <Info>ℹ</Info>
     </GridAction>
   );
 }

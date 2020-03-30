@@ -26,6 +26,8 @@ export const GridTitle = styled.div`
 `;
 
 export const GridItem = styled.div`
+  color: #222;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -84,7 +86,26 @@ export const GridInference = styled.div`
   }
 `;
 
-export const GridGlyph = styled.div``;
+export const GridGlyph = styled.div`
+  margin-top: 8px;
+
+  & a {
+    display: block;
+
+    width: 24px;
+    line-height: 24px;
+    border-radius: 50%;
+    text-align: center;
+    border: 1px solid #222;
+    color: #222;
+  }
+
+  & a:hover {
+    border-color: pink;
+    color: pink;
+    text-decoration: none;
+  }
+`;
 
 export const GridActions = styled.div`
   display: flex;
@@ -250,6 +271,17 @@ function checkSelected(title, inferenceGlyphRecord, glyphRecord) {
   return selected;
 }
 
+function getImgSrc(img) {
+  const div = document.createElement("div");
+  div.innerHTML = img;
+
+  return div.getElementsByTagName("img")[0].getAttribute("src");
+}
+
+function encodeSvg(svg) {
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+}
+
 export function Grid(props) {
   const [{ inferenceType, inferenceGlyphRecord }] = React.useContext(
     StateContext
@@ -261,7 +293,9 @@ export function Grid(props) {
         {props.data.map(x => (
           <GridItem key={x.gid}>
             <GridContent>
-              {((inferenceType === "svg" || inferenceType === "autotrace") || props.title === "Inputs") &&
+              {(inferenceType === "svg" ||
+                inferenceType === "autotrace" ||
+                props.title === "Inputs") &&
                 x.svg && (
                   <GridSvg dangerouslySetInnerHTML={{ __html: x.svg }} />
                 )}
@@ -295,7 +329,26 @@ export function Grid(props) {
                 />
               )}
             </GridContent>
-            <GridGlyph>{x.glyph}</GridGlyph>
+            {x.svg && (
+              <GridGlyph>
+                <a
+                  href={encodeSvg(x.svg)}
+                  download={`${props.title}-${x.sourceFontName}-${x.glyph}.svg`}
+                >
+                  {x.glyph}
+                </a>
+              </GridGlyph>
+            )}
+            {x.bitmap && (
+              <GridGlyph>
+                <a
+                  href={getImgSrc(x.bitmap)}
+                  download={`${props.title}-${x.sourceFontName}-${x.glyph}.png`}
+                >
+                  {x.glyph}
+                </a>
+              </GridGlyph>
+            )}
             {props.title === "Inputs" && <GridInputsActions glyphRecord={x} />}
             {props.title === "Inferences" && (
               <GridInferencesActions glyphRecord={x} />
