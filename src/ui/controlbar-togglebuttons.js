@@ -76,7 +76,7 @@ export function InferenceTypeToggleButtonGroup(props) {
         variant="outline-primary"
         style={{ cursor: "pointer" }}
       >
-        Bitmap ⮕ SVG
+        Bitmap to SVG
       </ToggleButton>
       <ToggleButton
         value="bitmap"

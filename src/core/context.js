@@ -99,7 +99,7 @@ export const initialState = {
   modelName: defaultModelName,
   modelSuffix: defaultModelSuffix,
   fontName: "",
-  inferenceType: "svg",
+  inferenceType: "bitmap",
   bitmapDepth: 8,
   bitmapContrastList,
   bitmapContrast: defaultBitmapContrast,
