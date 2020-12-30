@@ -1,68 +1,59 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# public-foundry
 
-## Available Scripts
+## About Public Foundry
 
-In the project directory, you can run:
+[Public Foundry](http://publicfoundry.ai) is a project by Yvan Martinez, Joshua Trees and Krister Olsson, supported by a Google Focused Research Award from the Artists and Machine Intelligence program and the Hoffmitz Milken Center for Typography at ArtCenter College of Design.
 
-### `yarn start`
+## About Public Foundry Combinator
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The Public Foundry Combinator was built to test different machine learning models for font generation. This version was built specifically to work with Google's SVG-VAE model architecture: [SVG VAE: Generating Scalable Vector Graphics Typography](https://magenta.tensorflow.org/svg-vae)
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+The Combinator comprises a Flask-based [server](https://github.com/kolsson/public-foundry-combinator) component and React-based [client](https://github.com/kolsson/public-foundry-combinator-ui) component.
 
-### `yarn test`
+To begin, the user selects a model and a preprocessed font to use for inference. Next, the user can adjust the output format: SVG, inferred using the SVG decoder; Bitmap, inferred using the VAE; and Bitmap to SVG, inferred using the VAE and then postprocessed with potrace to create SVG glyphs. For the latter two output options bitmap depth and / or bitmap contrast can also be adjusted.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Once inference is complete the user can opt to ‘keep’ individual inferred glyphs to build their output typeface. An output typeface can include glyphs from any number of inferences across any number of models.
 
-### `yarn build`
+![Combinator](http://publicfoundry.ai/assets/combinator.png)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+1. Install the necessary dependencies
+```
+yarn install
+```    
+2. Edit the **src/core/context.js** *hostlist* variable to point to your Combinator [server](https://github.com/kolsson/public-foundry-combinator)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+For example:
+```
+const hostList = [
+ {
+    name: "lyra",
+    url: "http://10.0.1.210:5959/api"
+  },
+  {
+    name: "localhost",
+    url: "http://127.0.0.1:5959/api"
+  }
+];
+```
 
-### `yarn eject`
+## Usage
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```
+PORT=5858 yarn start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Inferences are made based on the settings at the top left of the Combinator window. These settings should be largely self explanatory.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Click a glyph in *Inputs* to make inferences based on that glyph. In SVG mode a glyph in *Inferences* can also be clicked, and an inference will be made. In practice the results are currently very poor.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+To move an *Input* or *Inference* glyph to your *Outputs* click the checkmark below the glyph. To remove an *Output* glyph click the X mark below the glyph.
 
-## Learn More
+The **i** mark below glyphs can be clicked for detailed information about the glyph.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The "Copy Outputs" button at the top right of the window will dump the data for all *Outputs* glyphs to the console, including SVG or bitmap data. SVG markup can be copied directly into a new file and once backslashes have been removed from before quote marks, saved as a readable SVG file.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
 
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+This project is open sourced under MIT license.
