@@ -50,7 +50,9 @@ Click a glyph in *Inputs* to make inferences based on that glyph. In SVG mode a 
 
 To move an *Input* or *Inference* glyph to your *Outputs* click the checkmark below the glyph. To remove an *Output* glyph click the X mark below the glyph.
 
-The **i** mark below glyphs can be clicked for detailed information about the glyph.
+The circled character below a glyph can be clicked to download the SVG or bitmap version of the glyph.
+
+The **i** mark below a glyph can be clicked for detailed information about the glyph.
 
 The "Copy Outputs" button at the top right of the window will dump the data for all *Outputs* glyphs to the console, including SVG or bitmap data. SVG markup can be copied directly into a new file and once backslashes have been removed from before quote marks, saved as a readable SVG file.
 
