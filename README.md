@@ -1,4 +1,4 @@
-# public-foundry
+# public-foundry-combinator-ui
 
 ## About Public Foundry
 
