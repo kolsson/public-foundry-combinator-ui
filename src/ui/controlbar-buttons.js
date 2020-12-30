@@ -14,6 +14,9 @@ export function ClearOutputsButton(props) {
 }
 
 export function PasteOutputsButton(props) {
+  // temporarily disabled due to prompt limitations
+  // https://stackoverflow.com/questions/15969503/prompt-max-length
+
   const [, dispatch] = React.useContext(StateContext);
   return (
     <Button
@@ -49,7 +52,11 @@ export function CopyOutputsButton(props) {
       variant="outline-success"
       onClick={() => {
         const outputsString = JSON.stringify(outputs);
-        prompt("Please copy the Outputs string below:", outputsString);
+        console.info(outputsString);
+        alert("Outputs copied to the console!");
+
+        // prompt can't handle long strings
+        // prompt("Please copy the Outputs string below:", outputsString);
       }}
     >
       Copy Outputs

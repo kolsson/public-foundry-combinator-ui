@@ -1,6 +1,7 @@
 import React from "react";
 
 export const StateContext = React.createContext();
+export const glyphCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 const emptyGlyphRecordSet = generateEmptyGlyphRecordSet();
 
@@ -15,7 +16,7 @@ function generateEmptyGlyphRecordSet() {
   const out = [];
 
   let index = 0;
-  for (let glyph of "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz") {
+  for (let glyph of glyphCharacters) {
     out.push({
       gid: generateId(),
       index: index++,
@@ -35,14 +36,6 @@ function generateEmptyGlyphRecordSet() {
 }
 
 const hostList = [
-  {
-    name: "lyra (WAN)",
-    url: "http://67.201.10.48:5959/api"
-  },
-  {
-    name: "lyra (LAN)",
-    url: "http://10.0.1.210:5959/api"
-  },
   {
     name: "localhost",
     url: "http://127.0.0.1:5959/api"

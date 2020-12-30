@@ -45,7 +45,7 @@ function Container(props) {
   ] = React.useContext(StateContext);
 
   React.useEffect(() => {
-    // first run
+    // first run only
 
     const fetchData = async () => {
       const fontList = await loadFontList(host, dispatch);
@@ -65,7 +65,7 @@ function Container(props) {
     };
 
     fetchData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

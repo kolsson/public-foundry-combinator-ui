@@ -11,7 +11,7 @@ import {
 } from "./controlbar-dropdowns";
 import {
   ClearOutputsButton,
-  PasteOutputsButton,
+  // PasteOutputsButton,
   CopyOutputsButton
 } from "./controlbar-buttons";
 import { InferenceTypeToggleButtonGroup } from "./controlbar-togglebuttons";
@@ -64,7 +64,7 @@ export function PrimaryControlBar(props) {
       <ControlBarGroup>
         <ClearOutputsButton />
         <ControlBarSpacer />
-        <PasteOutputsButton />
+        {/* <PasteOutputsButton /> */}
         <ControlBarSpacer />
         <CopyOutputsButton />
       </ControlBarGroup>

@@ -1,17 +1,18 @@
-import { generateId } from "../core/context";
+import { generateId, glyphCharacters } from "../core/context";
+
 
 function transformInputs(modelName, modelSuffix, fontName, data) {
   const inputs = [];
   let inferenceGlyphRecord = null;
 
-  let index = 0;
   for (let glyph in data) {
     const svg = data[glyph];
 
     // generate a new record
+
     const glyphRecord = {
       gid: generateId(),
-      index: index++,
+      index: glyphCharacters.indexOf(glyph),
       glyph,
       uni: glyph.charCodeAt(0),
       svg,

@@ -4,8 +4,6 @@ import { ToggleButtonGroup, ToggleButton } from "react-bootstrap";
 import { StateContext } from "../core/context";
 import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 
-import { ControlBarSpacer, ControlBarLabel } from "./controlbar";
-
 export function InferenceTypeToggleButtonGroup(props) {
   const [
     {

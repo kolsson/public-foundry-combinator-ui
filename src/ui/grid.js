@@ -7,7 +7,7 @@ import { loadFontInferences, loadSvgInferences } from "../core/inferences";
 import {
   GridSetOutputAction,
   GridInfoAction,
-  GridClearOutputAction
+  GridClearOutputAction,
 } from "./grid-actions";
 
 export const GridLayout = styled.div`
@@ -71,7 +71,7 @@ export const GridInference = styled.div`
   top: 0;
 
   ${"" /* lightblue = #ADD8E6 (173, 223, 255) */}
-  background-color: ${props =>
+  background-color: ${(props) =>
     props.selected ? "rgba(91, 191, 255, 0.5)" : "transparent"};
   width: 100%;
   height: 100%;
@@ -88,6 +88,7 @@ export const GridInference = styled.div`
 
 export const GridGlyph = styled.div`
   margin-top: 8px;
+  height: 26px;
 
   & a {
     display: block;
@@ -139,9 +140,9 @@ export function GridFontInference(props) {
       inferenceType,
       bitmapDepth,
       bitmapContrast,
-      inferenceGlyphRecord
+      inferenceGlyphRecord,
     },
-    dispatch
+    dispatch,
   ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
 
@@ -160,7 +161,7 @@ export function GridFontInference(props) {
               inferenceType,
               bitmapDepth,
               bitmapContrast,
-              inferenceGlyphRecord
+              inferenceGlyphRecord,
             },
             dispatch,
             currInferenceGlyphRecord
@@ -182,9 +183,9 @@ export function GridSvgInference(props) {
       inferenceType,
       bitmapDepth,
       bitmapContrast,
-      inferenceGlyphRecord
+      inferenceGlyphRecord,
     },
-    dispatch
+    dispatch,
   ] = React.useContext(StateContext);
   const currInferenceGlyphRecord = inferenceGlyphRecord;
 
@@ -203,7 +204,7 @@ export function GridSvgInference(props) {
               inferenceType,
               bitmapDepth,
               bitmapContrast,
-              inferenceGlyphRecord
+              inferenceGlyphRecord,
             },
             dispatch,
             currInferenceGlyphRecord
@@ -283,27 +284,26 @@ function encodeSvg(svg) {
 }
 
 export function Grid(props) {
-  const [{ inferenceType, inferenceGlyphRecord }] = React.useContext(
-    StateContext
-  );
+  const [{ inferenceGlyphRecord }] = React.useContext(StateContext);
 
   return (
     <div>
       <GridLayout>
-        {props.data.map(x => (
+        {props.data.map((x) => (
           <GridItem key={x.gid}>
             <GridContent>
-              {(inferenceType === "svg" ||
-                inferenceType === "autotrace" ||
-                props.title === "Inputs") &&
-                x.svg && (
-                  <GridSvg dangerouslySetInnerHTML={{ __html: x.svg }} />
-                )}
-              {inferenceType === "bitmap" &&
-                props.title !== "Inputs" &&
-                x.bitmap && (
-                  <GridBitmap dangerouslySetInnerHTML={{ __html: x.bitmap }} />
-                )}
+              {/* What to display */}
+
+              {!!x.svg && (
+                <GridSvg dangerouslySetInnerHTML={{ __html: x.svg }} />
+              )}
+
+              {!!x.bitmap && (
+                <GridBitmap dangerouslySetInnerHTML={{ __html: x.bitmap }} />
+              )}
+
+              {/* Inference actions */}
+
               {props.title === "Inputs" && (
                 <GridFontInference
                   glyphRecord={x}
@@ -349,6 +349,7 @@ export function Grid(props) {
                 </a>
               </GridGlyph>
             )}
+            {!x.svg && !x.bitmap && <GridGlyph />}
             {props.title === "Inputs" && <GridInputsActions glyphRecord={x} />}
             {props.title === "Inferences" && (
               <GridInferencesActions glyphRecord={x} />
